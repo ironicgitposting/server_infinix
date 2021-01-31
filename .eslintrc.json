@@ -4,7 +4,9 @@
   "rules": {
     "indent": "off",
     "no-underscore-dangle": "warn",
-    "eslint strict": ["off", "global"],
+    "no-console": "off",
+    "strict": ["warn", "never"],
+    "func-names": ["warn", "never"],
     "consistent-return": ["warn", { "treatUndefinedAsUnspecified": false }],
     "no-unused-vars": [
       "warn",
