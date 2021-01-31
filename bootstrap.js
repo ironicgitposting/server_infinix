@@ -4,7 +4,7 @@ Préparation du serveur express
  */
 const debug = require('debug')('node-angular');
 const http = require('http');
-const app = require('./src/app');
+const app = require('./app');
 /*
 On s'assure que le port sur lequel on essaye de lancer
 l'application soit valide
@@ -64,8 +64,8 @@ const server = http.createServer(app);
 // Initial States
 const onListening = () => {
   const addr = server.address();
-  debug(`Listening on ${bind}`);
-  debug(`Server Address: ${addr.address}`);
+  console.log(`Listening on ${bind}`);
+  console.log(`Server Address: ${addr.address}`);
 };
 
 server.on('error', onError);

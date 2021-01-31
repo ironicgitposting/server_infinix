@@ -2,10 +2,11 @@
   "name": "server_infinix",
   "version": "1.0.0",
   "description": "projet Eni - Infinix - Gestion flotte de véhicule",
-  "main": "index.js",
+  "main": "bootstrap.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start:debug": "nodemon index.js"
+    "start:debug": "nodemon bootstrap.js",
+    "db:create": "sequelize-cli db:create"
   },
   "author": "",
   "license": "ISC",
@@ -20,13 +21,15 @@
     "eslint-plugin-react": "^7.22.0",
     "eslint-plugin-react-hooks": "^1.7.0",
     "nodemon": "^2.0.7",
-    "prettier": "^2.2.1"
+    "prettier": "^2.2.1",
+    "sequelize-cli": "^6.2.0"
   },
   "dependencies": {
     "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "debug": "^4.3.1",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.20",
