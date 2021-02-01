@@ -1,12 +1,23 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
-const corsMiddleware = require('./middlewares/cors/cors.middleware');
+const {
+  Pool,
+} = require('pg');
+require('dotenv').config();
+
+const {
+  DB_HOST,
+  DB_USERNAME,
+  DB_PASSWORD,
+  DB_PORT,
+} = process.env;
+
+const corsMiddleware = require('./src/middlewares/cors/cors.middleware');
 
 const app = express();
 
 const activeApiPath = '/api/v1';
-// Connect DB
 
 // Middlewares
 app.use(corsMiddleware({
