@@ -27,7 +27,7 @@ module.exports = {
   production: {
     username: DB_USERNAME,
     password: DB_PASSWORD,
-    database: 'database_production',
+    database: 'infinix_database_production',
     host: DB_HOST,
     dialect: 'postgres',
   },

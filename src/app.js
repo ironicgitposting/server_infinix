@@ -1,19 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
-const {
-  Pool,
-} = require('pg');
-require('dotenv').config();
-
-const {
-  DB_HOST,
-  DB_USERNAME,
-  DB_PASSWORD,
-  DB_PORT,
-} = process.env;
-
 const corsMiddleware = require('./middlewares/cors/cors.middleware');
+const db = require('./models');
 
 const app = express();
 
@@ -29,7 +18,10 @@ app.use(bodyParser.urlencoded({
   extended: false,
 }));
 
-app.get(`${API_VERSION}/`, (req, res) => {
+app.get(`${API_VERSION}/`, async (req, res) => {
+  // Database querying example
+  const users = await db.sequelize.models.User.findAll();
+  console.log(users);
   res.send('Hello World!');
 });
 
