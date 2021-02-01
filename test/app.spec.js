@@ -13,14 +13,14 @@ chai.should();
 
 chai.use(chaiHttp);
 
-describe('APP Bootrap', () => {
+describe('APP Bootstrap', () => {
   /**
    * Test the Get route
    */
   describe('GET /api/v1/', () => {
-    it('should should return 200', (done) => {
+    it('Application start should return 200', (done) => {
       chai.request(server)
-        .get('/api/v1/hello')
+        .get('/api/v1/')
         .end((err, response) => {
           response.should.have.status(200);
           // console.log(response);

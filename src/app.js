@@ -29,7 +29,7 @@ app.use(bodyParser.urlencoded({
   extended: false,
 }));
 
-app.get(`${API_VERSION}/hello`, (req, res) => {
+app.get(`${API_VERSION}/`, (req, res) => {
   res.send('Hello World!');
 });
 
