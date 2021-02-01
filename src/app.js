@@ -13,11 +13,11 @@ const {
   DB_PORT,
 } = process.env;
 
-const corsMiddleware = require('./src/middlewares/cors/cors.middleware');
+const corsMiddleware = require('./middlewares/cors/cors.middleware');
 
 const app = express();
 
-const activeApiPath = '/api/v1';
+const API_VERSION = '/api/v1';
 
 // Middlewares
 app.use(corsMiddleware({
@@ -29,13 +29,12 @@ app.use(bodyParser.urlencoded({
   extended: false,
 }));
 
-app.get('/', (req, res) => {
+app.get(`${API_VERSION}/hello`, (req, res) => {
   res.send('Hello World!');
 });
 
 // Launch Jobs
 
 // Activated routes
-// app.use(`${activeApiPath}/user`, userRoutes);
 
 module.exports = app;

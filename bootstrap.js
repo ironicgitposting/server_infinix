@@ -4,7 +4,7 @@ Préparation du serveur express
  */
 const debug = require('debug')('node-angular');
 const http = require('http');
-const app = require('./app');
+const app = require('./src/app');
 /*
 On s'assure que le port sur lequel on essaye de lancer
 l'application soit valide
