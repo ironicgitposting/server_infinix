@@ -2,13 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 
 const corsMiddleware = require('./middlewares/cors/cors.middleware');
-// DB Object
-const db = require('./models');
-
-// Les Entités qu'on importe
-const {
-  User,
-} = db.sequelize.models;
+const userRoutes = require('./routes/users.route');
 
 const app = express();
 
@@ -24,23 +18,15 @@ app.use(bodyParser.urlencoded({
   extended: false,
 }));
 
-app.get(`${API_VERSION}/`, async (req, res) => {
-  // Database querying example
-  const user = await User.findOne({
-    firstName: 'Kobe',
+app.get('', (req, res) => {
+  res.status(200).json({
+    message: 'Hello World',
   });
-  try {
-    await user.update({
-      email: 'bryant@blackmanba.com',
-    });
-  } catch (err) {
-    console.log(err);
-  }
-  res.send(user);
 });
 
 // Launch Jobs
 
 // Activated routes
+app.use(`${API_VERSION}/users`, userRoutes);
 
 module.exports = app;
