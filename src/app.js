@@ -16,7 +16,7 @@ app.use(bodyParser.urlencoded({
   extended: false,
 }));
 
-app.get('', (req, res) => {
+app.get(`${API_VERSION}/`, (req, res) => {
   res.status(200).json({
     message: 'Hello World',
   });
