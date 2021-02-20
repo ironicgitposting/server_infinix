@@ -1,5 +1,8 @@
 // DB Object
 const db = require('../models');
+const bcrypt = require('bcrypt');
+
+const jwt = require('jsonwebtoken');
 
 // Les Entités qu'on importe
 const {
@@ -21,5 +24,25 @@ exports.getUsers = async (req, res) => {
 };
 
 exports.createUser = async (req, res) => {
-  const {email, password}
+  const {name, surname, email, password} = req.body;
+  const hash = await bcrypt.hash(password, 10);
+
+
+  try {
+
+    const myUser = await User.create({​​ name, surname, email, password:hash }​​);
+
+    res.status(200).json({
+      message: 'User created'
+    });
+
+  } catch (error) {
+
+    return res.status(500)({
+      message: error
+    });
+    
+  }
+  
 };
+
