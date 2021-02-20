@@ -8,4 +8,9 @@ const router = express.Router();
 router.get('',
   UserController.getUsers);
 
+// 
+router.get('/login', UserController.loginUser);
+
+router.get('/signup', UserController.createUser);
+
 module.exports = router;

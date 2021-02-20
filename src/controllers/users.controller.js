@@ -19,3 +19,7 @@ exports.getUsers = async (req, res) => {
     });
   }
 };
+
+exports.createUser = async (req, res) => {
+  const {email, password}
+};
