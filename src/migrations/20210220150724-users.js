@@ -42,11 +42,11 @@ module.exports = {
         type: Sequelize.INTEGER,
       },
 
-      dateCreated: {
+      createdAt: {
         type: Sequelize.DATE,
       },
 
-      dateUpdated: {
+      updatedAt: {
         type: Sequelize.DATE,
       },
 

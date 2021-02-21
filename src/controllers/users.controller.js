@@ -29,19 +29,17 @@ exports.createUser = async (req, res) => {
 
 
   try {
-
-    const myUser = await User.create({​​ name, surname, email, password:hash }​​);
+    const user = new User({name, surname, email, password:hash});
+    //const user = await User.create({​​ name: "Jane" }​​);
+    await user.save();
 
     res.status(200).json({
       message: 'User created'
     });
-
   } catch (error) {
-
     return res.status(500)({
       message: error
-    });
-    
+    })
   }
   
 };

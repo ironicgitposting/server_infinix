@@ -23,9 +23,9 @@ module.exports = (sequelize, DataTypes) => {
       password: DataTypes.STRING,
       email: DataTypes.STRING,
       telephone: DataTypes.STRING,
-      authorization_access: DataTypes.INTEGER,
-      dateCreated: DataTypes.DATE,
-      dateUpdated: DataTypes.DATE,
+      authorizationAccess: DataTypes.INTEGER,
+      createdAt: DataTypes.DATE,
+      updatedAt: DataTypes.DATE,
       dateLastSeen: DataTypes.DATE,
       site: DataTypes.INTEGER,
       language: DataTypes.INTEGER,
@@ -35,7 +35,6 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: 'User',
-      underscored: true,
     },
   );
   return User;
