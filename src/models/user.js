@@ -1,6 +1,4 @@
-const {
-  Model,
-} = require('sequelize');
+const { Model } = require('sequelize');
 
 // npx sequelize-cli model:generate
 // --name User --attributes firstName:string,lastName:string,
@@ -16,13 +14,28 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  User.init({
-    firstName: DataTypes.STRING,
-    lastName: DataTypes.STRING,
-    email: DataTypes.STRING,
-  }, {
-    sequelize,
-    modelName: 'User',
-  });
+  User.init(
+    {
+      registrationNumber: DataTypes.STRING,
+      surname: DataTypes.STRING,
+      name: DataTypes.STRING,
+      profession: DataTypes.INTEGER,
+      password: DataTypes.STRING,
+      email: DataTypes.STRING,
+      telephone: DataTypes.STRING,
+      authorizationAccess: DataTypes.INTEGER,
+      createdAt: DataTypes.DATE,
+      updatedAt: DataTypes.DATE,
+      dateLastSeen: DataTypes.DATE,
+      site: DataTypes.INTEGER,
+      language: DataTypes.INTEGER,
+      archived: DataTypes.BOOLEAN,
+      archivedDate: DataTypes.DATE,
+    },
+    {
+      sequelize,
+      modelName: 'User',
+    },
+  );
   return User;
 };
