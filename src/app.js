@@ -1,14 +1,16 @@
 const express = require('express');
-const cors = require('cors');
 const bodyParser = require('body-parser');
 const userRoutes = require('./routes/users.route');
+const corsMW = require('./middleware/cors');
 
 const app = express();
 
 const API_VERSION = '/api/v1';
 
 // Middlewares
-app.use(cors());
+app.use(corsMW({
+  allowedMethods: 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
+}));
 
 app.use(bodyParser.json());
 app.use(
