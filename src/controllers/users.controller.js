@@ -1,13 +1,11 @@
 // DB Object
-const db = require('../models');
 const bcrypt = require('bcrypt');
 
 const jwt = require('jsonwebtoken');
+const db = require('../models');
 
 // Les Entités qu'on importe
-const {
-  User,
-} = db.sequelize.models;
+const { User } = db.sequelize.models;
 
 // Get all users
 exports.getUsers = async (req, res) => {
@@ -24,25 +22,69 @@ exports.getUsers = async (req, res) => {
 };
 
 exports.createUser = async (req, res) => {
-  const {name, surname, email, password} = req.body;
+  const { name, surname, email, password } = req.body;
+
   const hash = await bcrypt.hash(password, 10);
 
-
   try {
-    const user = new User({name, surname, email, password:hash});
-    //const user = await User.create({​​ name: "Jane" }​​);
+    const user = new User({
+      name,
+      surname,
+      email,
+      password: hash,
+    });
+
     await user.save();
 
     res.status(200).json({
-      message: 'User created'
+      message: 'User created',
     });
   } catch (error) {
     return res.status(500)({
-      message: error
-    })
+      message: error,
+    });
   }
-  
 };
 
-
-
+exports.loginUser = async (req, res) => {
+  let fetchedUser;
+  const { email, password } = req.body;
+  User.findOne({
+ where: {
+ email,
+},
+})
+    .then((user) => {
+      if (!user) {
+        return res.status(401).json({
+          message: 'Auth failure',
+        });
+      }
+      fetchedUser = user;
+      return bcrypt.compare(password, fetchedUser.password);
+    })
+    .then((result) => {
+      if (!result) {
+        return res.status(401).json({
+          message: 'Auth failure',
+        });
+      }
+      const token = jwt.sign(
+        {
+          email: fetchedUser.email,
+          userId: fetchedUser.id,
+        },
+        'my_secret_key',
+        {
+          expiresIn: '1h',
+        },
+      );
+      return res.status(200).json({
+        token,
+        expiresIn: 3600,
+      });
+    })
+    .catch((err) => res.status(401).json({
+        message: 'Auth failure',
+      }));
+};
