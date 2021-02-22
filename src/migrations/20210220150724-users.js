@@ -28,6 +28,7 @@ module.exports = {
 
       password: {
         type: Sequelize.STRING,
+        unique: 'compositeIndex',
       },
 
       email: {
