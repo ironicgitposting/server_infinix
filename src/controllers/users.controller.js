@@ -22,7 +22,20 @@ exports.getUsers = async (req, res) => {
 };
 
 exports.createUser = async (req, res) => {
-  const { name, surname, email, password } = req.body;
+  const { registrationNumber, 
+    surname, 
+    name, 
+    profession, 
+    password, 
+    email,
+    telephone,
+    authorizationAccess, 
+    dateLastSeen, 
+    site, 
+    language, 
+    archived, 
+    archivedDate
+  } = req.body;
 
   const hash = await bcrypt.hash(password, 10);
 
@@ -30,8 +43,14 @@ exports.createUser = async (req, res) => {
     const user = new User({
       name,
       surname,
-      email,
+      profession,
       password: hash,
+      email,
+      telephone,
+      site, 
+      language,
+      archived,
+      archivedDate
     });
 
     await user.save();
@@ -40,11 +59,97 @@ exports.createUser = async (req, res) => {
       message: 'User created',
     });
   } catch (error) {
-    return res.status(500)({
-      message: error,
+    
+    return res.status(500).json({
+      message: error.message,
     });
   }
 };
+
+exports.updateUser = async (req, res) => {
+  const id = req.params.id;
+  const { 
+    registrationNumber, 
+    surname, 
+    name, 
+    profession, 
+    password, 
+    email,
+    telephone,
+    authorizationAccess, 
+    dateLastSeen, 
+    site, 
+    language, 
+    archived, 
+    archivedDate
+        } = req.body;
+
+  const hash = await bcrypt.hash(password, 10);
+
+  await User.update({ 
+    surname, 
+    name, 
+    profession, 
+    password: hash, 
+    email,
+    telephone,
+    authorizationAccess,  
+    site, 
+    language, 
+    archived, 
+    archivedDate}, {
+         where: { 
+           id:id 
+          }
+    }).then( (result) => {
+
+    if (result == 1){
+
+      res.send({
+        message: "User updated successfully"
+      });
+
+    } else {
+
+      res.send({
+        message: "Something went wrong when trying to update user with id= "+id+", maybe it was not found"
+      });
+
+    }
+  }).catch(err => {
+    res.status(500).send({
+      message: "Error updating user with id = " + id
+    });
+  });
+};
+
+exports.deleteUser = async (req, res) => {
+  const id = req.params.id;
+
+  User.destroy({
+    where: {id: id}
+  }).then( (result) => {
+    if(result == 1){
+
+      res.send({ 
+        message : "User was deleted successfully"
+      });
+
+    } else {
+      
+      res.send({ 
+        message: "Cannot delete user with id= "+id+", maybe it wasn'nt found"
+      });
+
+    }
+  }).catch(err => {
+    res.status(500).send({
+      ùessage: "Could not delete user with id : "+id
+    });
+  });
+};
+
+
 
 exports.loginUser = async (req, res) => {
   let fetchedUser;
