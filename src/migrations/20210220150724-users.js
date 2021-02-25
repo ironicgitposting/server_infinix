@@ -33,6 +33,7 @@ module.exports = {
 
       email: {
         type: Sequelize.STRING,
+        unique: 'compositeIndex',
       },
 
       telephone: {
