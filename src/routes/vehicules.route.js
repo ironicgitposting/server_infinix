@@ -7,7 +7,7 @@ const router = express.Router();
 // Get all users
 router.get('', VehiculeController.getVehicules);
 
-//Create vehicule
+// Create vehicule
 router.post('/add', VehiculeController.createVehicule);
 
 // Update user
