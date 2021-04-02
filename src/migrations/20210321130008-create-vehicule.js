@@ -24,6 +24,12 @@ module.exports = {
       state: {
         type: Sequelize.INTEGER
       },
+      linkImage: {
+        type: Sequelize.STRING,
+        vaidate: {
+          isUrl: true
+        }
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
