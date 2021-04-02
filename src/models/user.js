@@ -1,4 +1,5 @@
-const { Model } = require('sequelize');
+const { Model, STRING, TEXT } = require('sequelize');
+const { commonModel, commonOptions} = require('')
 
 // npx sequelize-cli model:generate
 // --name User --attributes firstName:string,lastName:string,
@@ -11,9 +12,10 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      User.hasMany(models.status);
+      User.hasMany(models.civility);
     }
-  }
+  };
   User.init(
     {
       registrationNumber: DataTypes.STRING,
@@ -23,7 +25,7 @@ module.exports = (sequelize, DataTypes) => {
       password: DataTypes.STRING,
       email: {
         type: DataTypes.STRING,
-        unique: 'compositeIndex',
+        unique: 'compositeIndex'
       },
       telephone: DataTypes.STRING,
       authorizationAccess: DataTypes.INTEGER,
@@ -34,6 +36,10 @@ module.exports = (sequelize, DataTypes) => {
       language: DataTypes.INTEGER,
       archived: DataTypes.BOOLEAN,
       archivedDate: DataTypes.DATE,
+      flagChangePassword: DataTypes.BOOLEAN,
+      flagDurablePassword: DataTypes.BOOLEAN,
+      status: DataTypes.INTEGER,
+      civility: DataTypes.INTEGER
     },
     {
       sequelize,

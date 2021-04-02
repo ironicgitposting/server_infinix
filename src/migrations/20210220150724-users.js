@@ -71,6 +71,19 @@ module.exports = {
       archivedDate: {
         type: Sequelize.DATE,
       },
+      flagChangePassword: {
+        type: Sequelize.BOOLEAN,
+      },
+      flagDurablePassword: {
+        type: Sequelize.BOOLEAN,
+      },
+      civility: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+      },
+      profile: {
+        type: Sequelize.INTEGER
+      }
     });
   },
 
