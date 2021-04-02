@@ -2,9 +2,9 @@
 Point d'entrée du processus Nodejs
 Préparation du serveur express
  */
-const debug = require('debug')('node-angular');
-const http = require('http');
-const app = require('./src/app');
+const debug = require("debug")("node-angular");
+const http = require("http");
+const app = require("./src/app");
 /*
 On s'assure que le port sur lequel on essaye de lancer
 l'application soit valide
@@ -25,8 +25,8 @@ const normalizePort = (val) => {
   return false;
 };
 
-const port = normalizePort(process.env.PORT || '3000');
-const bind = typeof port === 'string' ? `pipe ${port}` : `port ${port}`;
+const port = normalizePort(process.env.PORT || "3000");
+const bind = typeof port === "string" ? `pipe ${port}` : `port ${port}`;
 
 /**
 Permet de gérer les erreurs au démarrage du serveur,
@@ -46,18 +46,18 @@ const handleError = {
 };
 
 const onError = (error) => {
-  if (error.syscall !== 'listen') {
+  if (error.syscall !== "listen") {
     throw error;
   }
 
   if (Object.prototype.hasOwnProperty.call(handleError, error.code)) {
-    handleError(error.code);
+    //handleError(error.code);
   } else {
     throw error;
   }
 };
 
-app.set('port', port);
+app.set("port", port);
 
 const server = http.createServer(app);
 
@@ -68,6 +68,6 @@ const onListening = () => {
   console.log(`Server Address: ${addr.address}`);
 };
 
-server.on('error', onError);
-server.on('listening', onListening);
+server.on("error", onError);
+server.on("listening", onListening);
 server.listen(port);

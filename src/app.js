@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const userRoutes = require('./routes/users.route');
+const mailRoutes = require('./routes/mails.route');
 const corsMW = require('./middleware/cors');
 
 const app = express();
@@ -8,9 +9,11 @@ const app = express();
 const API_VERSION = '/api/v1';
 
 // Middlewares
-app.use(corsMW({
-  allowedMethods: 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
-}));
+app.use(
+  corsMW({
+    allowedMethods: 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
+  }),
+);
 
 app.use(bodyParser.json());
 app.use(
@@ -29,5 +32,6 @@ app.get(`${API_VERSION}/`, (req, res) => {
 
 // Activated routes
 app.use(`${API_VERSION}/users`, userRoutes);
+app.use(`${API_VERSION}/mails`, mailRoutes);
 
 module.exports = app;
