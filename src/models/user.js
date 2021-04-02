@@ -25,7 +25,7 @@ module.exports = (sequelize, DataTypes) => {
       password: DataTypes.STRING,
       email: {
         type: DataTypes.STRING,
-        unique: 'compositeIndex'
+        unique: true
       },
       telephone: DataTypes.STRING,
       authorizationAccess: DataTypes.INTEGER,

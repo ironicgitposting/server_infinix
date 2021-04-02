@@ -8,6 +8,7 @@ module.exports = {
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
+        unique: true
       },
 
       registrationNumber: {
@@ -28,12 +29,11 @@ module.exports = {
 
       password: {
         type: Sequelize.STRING,
-        unique: 'compositeIndex',
       },
 
       email: {
         type: Sequelize.STRING,
-        unique: 'compositeIndex',
+        unique: true,
       },
 
       telephone: {

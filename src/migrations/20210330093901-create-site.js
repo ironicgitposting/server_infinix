@@ -6,7 +6,8 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        unique: true
       },
       libelle: {
         type: Sequelize.STRING
@@ -24,7 +25,11 @@ module.exports = {
         type: Sequelize.STRING
       },
       mail: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        unique: true,
+        validate: {
+            isEmail: true
+        }
       },
       pays: {
         type: Sequelize.STRING
