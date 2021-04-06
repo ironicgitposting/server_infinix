@@ -14,6 +14,6 @@ router.post('/add', VehiculeController.createVehicule);
 router.get('/update/:id', VehiculeController.updateVehicule);
 
 // Delete user
-router.get('/delete/:id', VehiculeController.deleteVehicule);
+router.post('/delete/:immatriculation', VehiculeController.deleteVehicule);
 
 module.exports = router;

@@ -106,10 +106,10 @@ exports.updateVehicule = async (req, res) => {
 };
 
 exports.deleteVehicule = async (req, res) => {
-  const id = req.params.id;
+  const immatriculation = req.params.immatriculation;
 
   Vehicule.destroy({
-    where: {id: id}
+    where: {immatriculation: immatriculation}
   }).then( (result) => {
     if(result == 1){
 
@@ -120,13 +120,13 @@ exports.deleteVehicule = async (req, res) => {
     } else {
       
       res.send({ 
-        message: "Cannot delete vehicule with id= "+id+", maybe it wasn'nt found"
+        message: "Cannot delete vehicule with id= "+immatriculation+", maybe it wasn't found"
       });
 
     }
   }).catch(err => {
     res.status(500).send({
-      ùessage: "Could not delete vehicule with id : "+id
+      message: "Could not delete vehicule with id : "+immatriculation
     });
   });
 };
