@@ -11,7 +11,7 @@ router.get('', VehiculeController.getVehicules);
 router.post('/add', VehiculeController.createVehicule);
 
 // Update user
-router.get('/update/:id', VehiculeController.updateVehicule);
+router.put('/update/:immatriculation', VehiculeController.updateVehicule);
 
 // Delete user
 router.post('/delete/:immatriculation', VehiculeController.deleteVehicule);

@@ -59,7 +59,7 @@ exports.createVehicule = async (req, res) => {
 };
 
 exports.updateVehicule = async (req, res) => {
-  const id = req.params.id;
+  const lastImmatriculation = req.params.immatriculation;
   const { 
     type,
     libelle,
@@ -81,7 +81,7 @@ exports.updateVehicule = async (req, res) => {
     immatriculation,
     state}, {
          where: { 
-           id:id 
+          immatriculation:lastImmatriculation 
           }
     }).then( (result) => {
 
@@ -94,13 +94,13 @@ exports.updateVehicule = async (req, res) => {
     } else {
 
       res.send({
-        message: "Something went wrong when trying to update vehicule with id= "+id+", maybe it was not found"
+        message: "Something went wrong when trying to update vehicule with immatriculation= "+lastImmatriculation+", maybe it was not found"
       });
 
     }
   }).catch(err => {
     res.status(500).send({
-      message: "Error updating vehicule with id = " + id
+      message: "Error updating vehicule with immatriculation = " + lastImmatriculation
     });
   });
 };
