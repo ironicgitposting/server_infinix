@@ -14,9 +14,9 @@ router.post('/login', UserController.loginUser);
 router.post('/signup', UserController.createUser);
 
 // Update user
-router.get('/update/:id', UserController.updateUser);
+router.put('/update/:email', UserController.updateUser);
 
 // Delete user
-router.get('/delete/:id', UserController.deleteUser);
+router.post('/delete/:email', UserController.deleteUser);
 
 module.exports = router;
