@@ -1,14 +1,14 @@
-'use strict';
+"use strict";
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('Users', {
+    await queryInterface.createTable("Users", {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
-        unique: true
+        unique: true,
       },
 
       registrationNumber: {
@@ -77,17 +77,13 @@ module.exports = {
       flagDurablePassword: {
         type: Sequelize.BOOLEAN,
       },
-      civility: {
-        type: Sequelize.INTEGER,
-        allowNull: false
-      },
       profile: {
-        type: Sequelize.INTEGER
-      }
+        type: Sequelize.INTEGER,
+      },
     });
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('Users');
+    await queryInterface.dropTable("Users");
   },
 };
