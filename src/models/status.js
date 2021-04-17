@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      status.hasMany(models.familyStatus);
+      // status.hasMany(models.familyStatus);
     }
   };
   status.init(

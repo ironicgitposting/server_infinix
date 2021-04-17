@@ -1,5 +1,4 @@
-const { Model, STRING, TEXT } = require('sequelize');
-const { commonModel, commonOptions} = require('')
+const { Model } = require('sequelize');
 
 // npx sequelize-cli model:generate
 // --name User --attributes firstName:string,lastName:string,
@@ -12,8 +11,8 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      User.hasMany(models.status);
-      User.hasMany(models.civility);
+      // User.hasMany(models.status);
+      // User.hasMany(models.civility);
     }
   };
   User.init(
