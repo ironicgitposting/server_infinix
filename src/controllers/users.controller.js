@@ -1,8 +1,8 @@
 // DB Object
-const bcrypt = require('bcrypt');
+const bcrypt = require("bcrypt");
 
-const jwt = require('jsonwebtoken');
-const db = require('../models');
+const jwt = require("jsonwebtoken");
+const db = require("../models");
 
 // Les Entités qu'on importe
 const { User } = db.sequelize.models;
@@ -23,7 +23,7 @@ exports.getUsers = async (req, res) => {
 
 exports.createUser = async (req, res) => {
   const {
- registrationNumber,
+    registrationNumber,
     surname,
     name,
     profession,
@@ -57,7 +57,7 @@ exports.createUser = async (req, res) => {
     await user.save();
 
     res.status(200).json({
-      message: 'User created',
+      message: "User created",
     });
   } catch (error) {
     return res.status(500).json({
@@ -71,27 +71,32 @@ exports.updateUser = async (req, res) => {
   const { email } = req.params;
   const propsToUpdate = { ...req.body };
 
-  await User.update({
-    ...propsToUpdate,
-}, {
-         where: {
-           email,
-          },
-    }).then((result) => {
-    if (result === 1) {
-      res.send({
-        message: 'User updated successfully',
-      });
-    } else {
-      res.send({
-        message: `Something went wrong when trying to update user with id= ${id}, maybe it was not found`,
-      });
+  await User.update(
+    {
+      ...propsToUpdate,
+    },
+    {
+      where: {
+        email,
+      },
     }
-  }).catch((err) => {
-    res.status(500).send({
-      message: err,
+  )
+    .then((result) => {
+      if (result === 1) {
+        res.send({
+          message: "User updated successfully",
+        });
+      } else {
+        res.send({
+          message: `Something went wrong when trying to update user with id= ${id}, maybe it was not found`,
+        });
+      }
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message: err,
+      });
     });
-  });
 };
 
 exports.deleteUser = async (req, res) => {
@@ -100,36 +105,38 @@ exports.deleteUser = async (req, res) => {
   User.destroy({
     where: {
       email,
-},
-  }).then((result) => {
-    if (result === 1) {
-      res.send({
-        message: 'User was deleted successfully',
+    },
+  })
+    .then((result) => {
+      if (result === 1) {
+        res.send({
+          message: "User was deleted successfully",
+        });
+      } else {
+        res.send({
+          message: `Cannot delete user with email= ${email}, maybe it wasn'nt found`,
+        });
+      }
+    })
+    .catch((err) => {
+      res.status(500).send({
+        ùessage: `Could not delete user with email : ${email}`,
       });
-    } else {
-      res.send({
-        message: `Cannot delete user with email= ${email}, maybe it wasn'nt found`,
-      });
-    }
-  }).catch((err) => {
-    res.status(500).send({
-      ùessage: `Could not delete user with email : ${email}`,
     });
-  });
 };
 
 exports.loginUser = async (req, res) => {
   let fetchedUser;
   const { email, password } = req.body;
   User.findOne({
- where: {
- email,
-},
-})
+    where: {
+      email,
+    },
+  })
     .then((user) => {
       if (!user) {
         return res.status(401).json({
-          message: 'Auth failure',
+          message: "Auth failure",
         });
       }
       fetchedUser = user;
@@ -138,7 +145,7 @@ exports.loginUser = async (req, res) => {
     .then((result) => {
       if (!result) {
         return res.status(401).json({
-          message: 'Auth failure',
+          message: "Auth failure",
         });
       }
       const token = jwt.sign(
@@ -146,17 +153,19 @@ exports.loginUser = async (req, res) => {
           email: fetchedUser.email,
           userId: fetchedUser.id,
         },
-        'my_secret_key',
+        "my_secret_key",
         {
-          expiresIn: '1h',
-        },
+          expiresIn: "1h",
+        }
       );
       return res.status(200).json({
         token,
         expiresIn: 3600,
       });
     })
-    .catch((err) => res.status(401).json({
-        message: 'Auth failure',
-      }));
+    .catch((err) =>
+      res.status(401).json({
+        message: "Auth failure",
+      })
+    );
 };
