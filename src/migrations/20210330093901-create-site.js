@@ -1,50 +1,50 @@
-'use strict';
+"use strict";
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('Site', {
+    await queryInterface.createTable("Site", {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
-        unique: true
+        unique: true,
       },
-      libelle: {
-        type: Sequelize.STRING
+      label: {
+        type: Sequelize.STRING,
       },
       adress: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       postalCode: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       city: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       phone: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       mail: {
         type: Sequelize.STRING,
         unique: true,
         validate: {
-            isEmail: true
-        }
+          isEmail: true,
+        },
       },
       pays: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('Sites');
-  }
+    await queryInterface.dropTable("Sites");
+  },
 };
