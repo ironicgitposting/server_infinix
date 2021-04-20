@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 
 const jwt = require("jsonwebtoken");
 const db = require("../models");
+const MailController = require("./mails.controller");
 
 // Les Entités qu'on importe
 const { User } = db.sequelize.models;
@@ -55,6 +56,7 @@ exports.createUser = async (req, res) => {
     });
 
     await user.save();
+    MailController.sendMailUserCreationRequest("infinix.supp@gmail.com");
 
     res.status(200).json({
       message: "User created",
@@ -120,7 +122,7 @@ exports.deleteUser = async (req, res) => {
     })
     .catch((err) => {
       res.status(500).send({
-        ùessage: `Could not delete user with email : ${email}`,
+        message: `Could not delete user with email : ${email}`,
       });
     });
 };
