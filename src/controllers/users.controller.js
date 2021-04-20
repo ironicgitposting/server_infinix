@@ -69,87 +69,60 @@ exports.createUser = async (req, res) => {
 };
 
 exports.updateUser = async (req, res) => {
-  const id = req.params.id;
-  const {
-    registrationNumber,
-    surname,
-    name,
-    profession,
-    password,
-    email,
-    telephone,
-    authorizationAccess,
-    dateLastSeen,
-    site,
-    language,
-    archived,
-    archivedDate,
-  } = req.body;
-
-  const hash = await bcrypt.hash(password, 10);
+  console.log(req);
+  const { email } = req.params;
+  const propsToUpdate = { ...req.body };
 
   await User.update(
     {
-      surname,
-      name,
-      profession,
-      password: hash,
-      email,
-      telephone,
-      authorizationAccess,
-      site,
-      language,
-      archived,
-      archivedDate,
+      ...propsToUpdate,
     },
     {
       where: {
-        id: id,
+        email,
       },
     }
   )
     .then((result) => {
-      if (result == 1) {
+      if (result === 1) {
         res.send({
           message: "User updated successfully",
         });
       } else {
         res.send({
-          message:
-            "Something went wrong when trying to update user with id= " +
-            id +
-            ", maybe it was not found",
+          message: `Something went wrong when trying to update user with id= ${id}, maybe it was not found`,
         });
       }
     })
     .catch((err) => {
       res.status(500).send({
-        message: "Error updating user with id = " + id,
+        message: err,
       });
     });
 };
 
 exports.deleteUser = async (req, res) => {
-  const id = req.params.id;
+  const { email } = req.params;
 
   User.destroy({
-    where: { id: id },
+    where: {
+      email,
+    },
   })
     .then((result) => {
-      if (result == 1) {
+      if (result === 1) {
         res.send({
           message: "User was deleted successfully",
         });
       } else {
         res.send({
-          message:
-            "Cannot delete user with id= " + id + ", maybe it wasn'nt found",
+          message: `Cannot delete user with email= ${email}, maybe it wasn'nt found`,
         });
       }
     })
     .catch((err) => {
       res.status(500).send({
-        ùessage: "Could not delete user with id : " + id,
+        message: `Could not delete user with email : ${email}`,
       });
     });
 };

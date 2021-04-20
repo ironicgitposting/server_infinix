@@ -1,7 +1,10 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+
 const userRoutes = require('./routes/users.route');
 const mailRoutes = require('./routes/mails.route');
+const vehiculeRoutes = require('./routes/vehicules.route');
+const bookingRoutes = require('./routes/booking.route');
 const corsMW = require('./middleware/cors');
 
 const app = express();
@@ -33,5 +36,7 @@ app.get(`${API_VERSION}/`, (req, res) => {
 // Activated routes
 app.use(`${API_VERSION}/users`, userRoutes);
 app.use(`${API_VERSION}/mails`, mailRoutes);
+app.use(`${API_VERSION}/vehicules`, vehiculeRoutes);
+app.use(`${API_VERSION}/booking`, bookingRoutes);
 
 module.exports = app;

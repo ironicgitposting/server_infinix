@@ -1,13 +1,14 @@
-'use strict';
+"use strict";
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('Users', {
+    await queryInterface.createTable("Users", {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
+        unique: true,
       },
 
       registrationNumber: {
@@ -28,12 +29,11 @@ module.exports = {
 
       password: {
         type: Sequelize.STRING,
-        unique: 'compositeIndex',
       },
 
       email: {
         type: Sequelize.STRING,
-        unique: 'compositeIndex',
+        unique: true,
       },
 
       telephone: {
@@ -71,10 +71,19 @@ module.exports = {
       archivedDate: {
         type: Sequelize.DATE,
       },
+      flagChangePassword: {
+        type: Sequelize.BOOLEAN,
+      },
+      flagDurablePassword: {
+        type: Sequelize.BOOLEAN,
+      },
+      profile: {
+        type: Sequelize.INTEGER,
+      },
     });
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('Users');
+    await queryInterface.dropTable("Users");
   },
 };
