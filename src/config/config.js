@@ -3,11 +3,7 @@ require("dotenv").config();
 
 // For production we need to add SSL and configure and follow instructions found here:
 // https://sequelize.org/master/class/lib/sequelize.js~Sequelize.html#instance-constructor-constructor
-const {
-  DB_HOST,
-  DB_USERNAME = "postgres",
-  DB_PASSWORD = "postgres",
-} = process.env;
+const { DB_HOST, DB_USERNAME, DB_PASSWORD } = process.env;
 
 module.exports = {
   development: {
