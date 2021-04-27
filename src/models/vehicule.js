@@ -28,8 +28,9 @@ module.exports = (sequelize, DataTypes) => {
         libelle: DataTypes.STRING,
         model: DataTypes.STRING,
         flagService: DataTypes.BOOLEAN,
+        immatriculation: DataTypes.STRING,
         state: DataTypes.INTEGER,
-        linkImage: DataTypes.STRING,
+        
       }, {
         sequelize,
         modelName: 'Vehicule',
