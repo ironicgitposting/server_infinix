@@ -56,7 +56,7 @@ exports.createUser = async (req, res) => {
     });
 
     await user.save();
-    MailController.sendMailUserCreationRequest("infinix.supp@gmail.com");
+    MailController.sendMailUserCreationRequest(user);
 
     res.status(200).json({
       message: "User created",
