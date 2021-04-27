@@ -72,36 +72,27 @@ exports.createUser = async (req, res) => {
 };
 
 exports.updateUser = async (req, res) => {
-  console.log(req);
   const { email } = req.params;
   const propsToUpdate = { ...req.body };
+  const user = await User.findOne({where: {email}});
+  if (!user) {
+    throw Error(`User not updated. email: ${email}`);
+  }
 
-  await User.update(
-    {
-      ...propsToUpdate,
-    },
-    {
-      where: {
-        email,
-      },
-    }
-  )
-    .then((result) => {
-      if (result === 1) {
-        res.send({
-          message: "User updated successfully",
-        });
-      } else {
-        res.send({
-          message: `Something went wrong when trying to update user with id= ${id}, maybe it was not found`,
-        });
-      }
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message: err,
-      });
+  for (const prop in propsToUpdate) {
+    user[prop] = propsToUpdate[prop];
+  }
+
+  try {
+    await user.save();
+    res.status(200).json({
+      message: "User updated",
     });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
 };
 
 exports.deleteUser = async (req, res) => {
