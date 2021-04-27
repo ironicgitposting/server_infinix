@@ -104,13 +104,13 @@ module.exports = {
         );
       })
     .then(() => {
-      return queryInterface.remodeColumn(
+      return queryInterface.removeColumn(
         'Vehicule',
         'status'
       );
     })
     .then(() => {
-      return queryInterface.remodeColumn(
+      return queryInterface.removeColumn(
         'Vehicule',
         'site'
       );

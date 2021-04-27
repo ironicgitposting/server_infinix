@@ -1,17 +1,33 @@
+const { Model } = require('sequelize');
+
+// npx sequelize-cli model:generate
+// --name User --attributes firstName:string,lastName:string,
+// email:string
 module.exports = (sequelize, DataTypes) => {
-  const status = sequelize.define("status", {
-    id: {
-      allowNull: false,
-      autoIncrement: true,
-      primaryKey: true,
-      type: DataTypes.INTEGER,
-    },
-    label: DataTypes.STRING,
-  });
+  class Status extends Model {
+    /**
+     * Helper method for defining associations.
+     * This method is not a part of Sequelize lifecycle.
+     * The `models/index` file will call this method automatically.
+     */
+    static associate(models) {
+      Status.hasOne(models.FamilyStatus);
+    }
+  }
 
-  status.associate = (models) => {
-    status.hasOne(models.familyStatus);
-  };
-
-  return status;
+  Status.init(
+      {
+        id: {
+          allowNull: false,
+          autoIncrement: true,
+          primaryKey: true,
+          type: DataTypes.INTEGER,
+        },
+        label: DataTypes.STRING,
+      }, {
+        sequelize,
+        modelName: 'Status',
+      })
+  return Status;
 };
+

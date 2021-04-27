@@ -11,10 +11,12 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      User.hasOne(models.status);
-      User.hasMany(models.civility);
+        console.log(models.Status);
+      User.hasOne(models.Status);
+      //User.hasMany();
     }
-  };
+  }
+
   User.init(
       {
         id: {
@@ -38,6 +40,7 @@ module.exports = (sequelize, DataTypes) => {
         language: DataTypes.INTEGER,
         archived: DataTypes.BOOLEAN,
         archivedDate: DataTypes.DATE,
+        enabled: DataTypes.BOOLEAN,
         flagChangePassword: DataTypes.BOOLEAN,
         flagDurablePassword: DataTypes.BOOLEAN,
   }, {
