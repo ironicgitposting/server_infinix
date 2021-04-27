@@ -1,13 +1,11 @@
-'use strict';
-
-const { query } = require("express");
+"use strict";
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('Vehicules', {
+    await queryInterface.createTable("Vehicules", {
       id: {
         allowNull: false,
-        autoIncrement: true, 
+        autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
@@ -20,20 +18,12 @@ module.exports = {
         type: Sequelize.STRING,
       },
 
-      site: {
-        type: Sequelize.STRING,
-      },
-
       model: {
         type: Sequelize.STRING,
       },
 
-      flagService:{
+      flagService: {
         type: Sequelize.BOOLEAN,
-      },
-
-      status:{
-        type: Sequelize.INTEGER,
       },
 
       createdAt: {
@@ -50,11 +40,11 @@ module.exports = {
 
       state: {
         type: Sequelize.INTEGER,
-      }
+      },
     });
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('Vehicules');
+    await queryInterface.dropTable("Vehicules");
   },
 };

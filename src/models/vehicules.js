@@ -1,4 +1,4 @@
-const { Model } = require('sequelize');
+const { Model } = require("sequelize");
 
 // npx sequelize-cli model:generate
 // --name User --attributes firstName:string,lastName:string,
@@ -17,27 +17,26 @@ module.exports = (sequelize, DataTypes) => {
   }
 
   Vehicule.init(
-      {
-        id: {
-          allowNull: false,
-          autoIncrement: true,
-          primaryKey: true,
-          type: DataTypes.INTEGER,
-        },
+    {
+      id: {
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
         type: DataTypes.INTEGER,
-        libelle: DataTypes.STRING,
-        site: DataTypes.STRING,
-        model: DataTypes.STRING,
-        flagService: DataTypes.BOOLEAN,
-        status: DataTypes.INTEGER,
-        immatriculation: DataTypes.STRING,
-        state: DataTypes.INTEGER,
-        
-      }, {
-        sequelize,
-        modelName: 'Vehicule',
-      })
+      },
+      type: DataTypes.INTEGER,
+      libelle: DataTypes.STRING,
+      site: DataTypes.STRING,
+      model: DataTypes.STRING,
+      flagService: DataTypes.BOOLEAN,
+      status: DataTypes.INTEGER,
+      immatriculation: DataTypes.STRING,
+      state: DataTypes.INTEGER,
+    },
+    {
+      sequelize,
+      modelName: "Vehicules",
+    }
+  );
   return Vehicule;
 };
-
-
