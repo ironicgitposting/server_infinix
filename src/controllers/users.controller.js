@@ -84,7 +84,15 @@ exports.updateUser = async (req, res) => {
   }
 
   try {
-    await user.save();
+    const propsUpdated = user.changed();
+    const userUpdated = await user.save();
+
+    if (propsUpdated.includes("enabled") && userUpdated.enabled) {
+      console.log("User activated: " + userUpdated.email);
+      console.log("User activated: " + userUpdated.enabled)
+      // Mail d'activation ici
+      // MailController
+    }
     res.status(200).json({
       message: "User updated",
     });

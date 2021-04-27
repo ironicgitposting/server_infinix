@@ -19,4 +19,5 @@ router.put('/update/:email', UserController.updateUser);
 // Delete user
 router.post('/delete/:email', UserController.deleteUser);
 
+
 module.exports = router;
