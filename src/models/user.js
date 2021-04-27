@@ -40,6 +40,7 @@ module.exports = (sequelize, DataTypes) => {
         language: DataTypes.INTEGER,
         archived: DataTypes.BOOLEAN,
         archivedDate: DataTypes.DATE,
+        enabled: DataTypes.BOOLEAN,
         flagChangePassword: DataTypes.BOOLEAN,
         flagDurablePassword: DataTypes.BOOLEAN,
   }, {
