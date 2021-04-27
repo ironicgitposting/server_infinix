@@ -26,10 +26,13 @@ module.exports = (sequelize, DataTypes) => {
         },
         type: DataTypes.INTEGER,
         libelle: DataTypes.STRING,
+        site: DataTypes.STRING,
         model: DataTypes.STRING,
         flagService: DataTypes.BOOLEAN,
+        status: DataTypes.INTEGER,
+        immatriculation: DataTypes.STRING,
         state: DataTypes.INTEGER,
-        linkImage: DataTypes.STRING,
+        
       }, {
         sequelize,
         modelName: 'Vehicule',

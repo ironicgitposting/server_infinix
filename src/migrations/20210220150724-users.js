@@ -68,6 +68,10 @@ module.exports = {
         type: Sequelize.BOOLEAN,
       },
 
+      enabled: {
+        type: Sequelize.BOOLEAN,
+      },
+
       archivedDate: {
         type: Sequelize.DATE,
       },

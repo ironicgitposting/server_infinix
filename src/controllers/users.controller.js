@@ -55,8 +55,11 @@ exports.createUser = async (req, res) => {
       archivedDate,
     });
 
+    // User must be activated manually by an admin
+    user.enabled = false;
     await user.save();
-    MailController.sendMailUserCreationRequest("infinix.supp@gmail.com");
+
+    // MailController.sendMailUserCreationRequest("infinix.supp@gmail.com");
 
     res.status(200).json({
       message: "User created",
