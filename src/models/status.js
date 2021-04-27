@@ -12,6 +12,9 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       Status.hasOne(models.FamilyStatus);
+      // FIXME: Voir pour les associations suivantes
+      // Status.hasMany(models.Vehicule, { foreignKey: 'status'});
+      // Status.hasMany(models.Vehicule, { foreignKey: 'site'});
     }
   }
 

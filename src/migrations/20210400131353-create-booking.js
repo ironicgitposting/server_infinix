@@ -8,12 +8,6 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      driver: {
-        type: Sequelize.INTEGER
-      },
-      vehicule: {
-        type: Sequelize.INTEGER
-      },
       startDate: {
         type: Sequelize.DATE
       },
@@ -21,9 +15,6 @@ module.exports = {
         type: Sequelize.DATE
       },
       status: {
-        type: Sequelize.INTEGER
-      },
-      departureSite: {
         type: Sequelize.INTEGER
       },
       createdAt: {

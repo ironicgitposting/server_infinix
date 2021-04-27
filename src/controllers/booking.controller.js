@@ -5,12 +5,27 @@ const jwt = require('jsonwebtoken');
 const db = require('../models');
 
 // Les Entités qu'on importe
-const { Booking } = db.sequelize.models;
+const { Booking, Vehicule, Site, User } = db.sequelize.models;
 
 // Get all users
 exports.getBookings = async (req, res) => {
   try {
-    const booking = await Booking.findAll();
+    const booking = await Booking.findAll({
+      include: [
+          {
+            model: Vehicule,
+            as: Booking.lentVehicule,
+          },
+          {
+            model: Site,
+            as: Booking.departureSite,
+          },
+          {
+            model: User,
+            as: Booking.driver,
+          },
+        ]
+    });
     res.status(200).json({
       booking,
     });
@@ -23,20 +38,22 @@ exports.getBookings = async (req, res) => {
 
 exports.createBooking = async (req, res) => {
   const {
-    vehicule,
+    driver,
+    lentVehicule,
     startDate,
     endDate,
     status,
-    departure
+    departureSite
   } = req.body;
 
   try {
     const booking = new Booking({
-      vehicule,
+      driver,
+      lentVehicule,
       startDate,
       endDate,
       status,
-      departure
+      departureSite
     });
 
     await booking.save();
