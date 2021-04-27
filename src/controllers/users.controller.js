@@ -61,6 +61,8 @@ exports.createUser = async (req, res) => {
 
     MailController.sendMailUserCreationRequest(user);
 
+    console.log("test allo");
+
     res.status(200).json({
       message: "User created",
     });
