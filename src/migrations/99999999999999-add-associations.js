@@ -63,6 +63,45 @@ module.exports = {
           },
           onDelete: "SET NULL",
         });
+      })
+      .then(() => {
+        return queryInterface.addColumn(
+          'Bookings',
+          'departureSite',
+          {
+            type: Sequelize.INTEGER,
+            references:{
+              model: 'Site',
+              key: 'id'
+            },
+            onDelete: 'SET NULL'
+          });
+      })
+      .then(() => {
+        return queryInterface.addColumn(
+          'Bookings',
+          'lentVehicule',
+          {
+            type: Sequelize.INTEGER,
+            references:{
+              model: 'Vehicules',
+              key: 'id'
+            },
+            onDelete: 'SET NULL'
+          });
+      })
+      .then(() => {
+        return queryInterface.addColumn(
+          'Bookings',
+          'driver',
+          {
+            type: Sequelize.INTEGER,
+            references:{
+              model: 'Users',
+              key: 'id'
+            },
+            onDelete: 'SET NULL'
+          });
       });
   },
 
@@ -86,6 +125,24 @@ module.exports = {
       })
       .then(() => {
         return queryInterface.removeColumn("Vehicules", "site");
+      })
+      .then(() => {
+        return queryInterface.removeColumn(
+          'Bookings',
+          'departureSite'
+        );
+      })
+      .then(() => {
+        return queryInterface.removeColumn(
+          'Bookings',
+          'lentVehicule'
+        );
+      })
+      .then(() => {
+        return queryInterface.removeColumn(
+          'Bookings',
+          'driver'
+        );
       });
   },
 };
