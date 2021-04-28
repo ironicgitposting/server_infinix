@@ -65,10 +65,7 @@ module.exports = {
         });
       })
       .then(() => {
-        return queryInterface.addColumn(
-          'Bookings',
-          'departureSite',
-          {
+        return queryInterface.addColumn('Bookings','departureSite',{
             type: Sequelize.INTEGER,
             references:{
               model: 'Site',
@@ -78,10 +75,7 @@ module.exports = {
           });
       })
       .then(() => {
-        return queryInterface.addColumn(
-          'Bookings',
-          'lentVehicule',
-          {
+        return queryInterface.addColumn('Bookings','lentVehicule',{
             type: Sequelize.INTEGER,
             references:{
               model: 'Vehicules',
@@ -91,10 +85,7 @@ module.exports = {
           });
       })
       .then(() => {
-        return queryInterface.addColumn(
-          'Bookings',
-          'driver',
-          {
+        return queryInterface.addColumn('Bookings','driver',{
             type: Sequelize.INTEGER,
             references:{
               model: 'Users',
@@ -127,22 +118,13 @@ module.exports = {
         return queryInterface.removeColumn("Vehicules", "site");
       })
       .then(() => {
-        return queryInterface.removeColumn(
-          'Bookings',
-          'departureSite'
-        );
+        return queryInterface.removeColumn('Bookings','departureSite');
       })
       .then(() => {
-        return queryInterface.removeColumn(
-          'Bookings',
-          'lentVehicule'
-        );
+        return queryInterface.removeColumn('Bookings','lentVehicule');
       })
       .then(() => {
-        return queryInterface.removeColumn(
-          'Bookings',
-          'driver'
-        );
+        return queryInterface.removeColumn('Bookings','driver');
       });
   },
 };
