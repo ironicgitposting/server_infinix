@@ -93,6 +93,16 @@ module.exports = {
             },
             onDelete: 'SET NULL'
           });
+      })
+      .then(() => {
+        return queryInterface.addColumn('Bookings','status',{
+          type: Sequelize.INTEGER,
+          references:{
+            model: 'Status',
+            key: 'id'
+          },
+          onDelete: 'SET NULL'
+        });
       });
   },
 
@@ -125,6 +135,9 @@ module.exports = {
       })
       .then(() => {
         return queryInterface.removeColumn('Bookings','driver');
+      })
+      .then(() => {
+        return queryInterface.removeColumn('Bookings','status');
       });
   },
 };

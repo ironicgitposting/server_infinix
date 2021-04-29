@@ -6,7 +6,7 @@ const db = require("../models");
 const MailController = require("./mails.controller");
 
 // Les Entités qu'on importe
-const { Booking, Vehicules, Site, User } = db.sequelize.models;
+const { Booking, Vehicules, Site, User, Status } = db.sequelize.models;
 
 // Get all users
 exports.getBookings = async (req, res) => {
@@ -24,6 +24,10 @@ exports.getBookings = async (req, res) => {
         {
           model: User,
           as: Booking.driver,
+        },
+        {
+          model: Status,
+          as: Booking.status,
         },
       ],
     });
