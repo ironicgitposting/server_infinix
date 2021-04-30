@@ -63,8 +63,6 @@ exports.createBooking = async (req, res) => {
 
     await booking.save();
 
-    console.log("booking.controller.js", booking);
-
     //Envoie du mail de demande de réservation de véhicule
     MailController.sendMailUserVehicleRequest(booking);
 

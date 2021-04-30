@@ -82,7 +82,7 @@ exports.updateUser = async (req, res) => {
   for (const prop in propsToUpdate) {
     user[prop] = propsToUpdate[prop];
   }
-  console.log("momo");
+
   try {
     const propsUpdated = user.changed();
     const userUpdated = await user.save();
@@ -92,8 +92,18 @@ exports.updateUser = async (req, res) => {
       console.log("User activated: " + userUpdated.enabled);
       // Mail d'activation ici
       MailController.sendMailUserActiverCompte(user);
-      console.log("tototo");
+
     }
+    if (propsUpdated.includes("enabled") && !userUpdated.enabled) {
+      console.log("User deactivated: " + userUpdated.email);
+      console.log("User deactivated: " + userUpdated.enabled);
+    // Mail de désactivation de compte utilisateur
+    MailController.sendMailUserDesactiverCompte(user);
+
+    }
+
+
+
     res.status(200).json({
       message: "User updated",
     });
@@ -177,8 +187,10 @@ exports.loginUser = async (req, res) => {
 
 // Get all users
 exports.getUserById = async (req, res) => {
+
+  //console.log("reponse :", req);
   try {
-    return User.findOne({ where: { id: req.id } });
+    return User.findOne({ where: { id: req } });
   } catch (error) {
     throw "impossible de trouver l'utilisateur avec la clé " + req.id;
   }
