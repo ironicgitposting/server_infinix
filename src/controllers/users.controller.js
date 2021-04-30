@@ -61,8 +61,6 @@ exports.createUser = async (req, res) => {
 
     MailController.sendMailUserCreationRequest(user);
 
-    console.log("test allo");
-
     res.status(200).json({
       message: "User created",
     });
@@ -76,7 +74,7 @@ exports.createUser = async (req, res) => {
 exports.updateUser = async (req, res) => {
   const { email } = req.params;
   const propsToUpdate = { ...req.body };
-  const user = await User.findOne({where: {email}});
+  const user = await User.findOne({ where: { email } });
   if (!user) {
     throw Error(`User not updated. email: ${email}`);
   }
@@ -91,10 +89,21 @@ exports.updateUser = async (req, res) => {
 
     if (propsUpdated.includes("enabled") && userUpdated.enabled) {
       console.log("User activated: " + userUpdated.email);
-      console.log("User activated: " + userUpdated.enabled)
+      console.log("User activated: " + userUpdated.enabled);
       // Mail d'activation ici
-      // MailController
+      MailController.sendMailUserActiverCompte(user);
+
     }
+    if (propsUpdated.includes("enabled") && !userUpdated.enabled) {
+      console.log("User deactivated: " + userUpdated.email);
+      console.log("User deactivated: " + userUpdated.enabled);
+    // Mail de désactivation de compte utilisateur
+    MailController.sendMailUserDesactiverCompte(user);
+
+    }
+
+
+
     res.status(200).json({
       message: "User updated",
     });
@@ -174,4 +183,15 @@ exports.loginUser = async (req, res) => {
         message: "Auth failure",
       })
     );
+};
+
+// Get all users
+exports.getUserById = async (req, res) => {
+
+  //console.log("reponse :", req);
+  try {
+    return User.findOne({ where: { id: req } });
+  } catch (error) {
+    throw "impossible de trouver l'utilisateur avec la clé " + req.id;
+  }
 };

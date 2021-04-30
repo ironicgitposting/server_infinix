@@ -9,8 +9,8 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Site.hasOne(models.Status);
-      Site.hasOne(models.Site);
+      Site.belongsTo(models.Status, { foreignKey: 'status'});
+      // Site.hasMany(models.Vehicule, { foreignKey: 'site'});
     }
   }
 
@@ -29,9 +29,11 @@ module.exports = (sequelize, DataTypes) => {
         phone: DataTypes.STRING,
         mail: DataTypes.STRING,
         pays: DataTypes.STRING,
+        status: DataTypes.INTEGER
       }, {
         sequelize,
         modelName: 'Site',
+        tableName: 'Site'
       })
   return Site;
 };
