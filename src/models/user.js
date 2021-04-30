@@ -11,8 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-        console.log(models.Status);
-      User.hasOne(models.Status);
+      // User.hasOne(models.Status);
       //User.hasMany();
     }
   }
