@@ -138,7 +138,7 @@ getMailUserVehicleRequest = async (transporter, booking) => {
   return transporter.sendMail({
     from:
       '"Demande de réservation de véhicule - Infinix" <infinix.supp@gmail.com>', // sender address
-    to: "mouradoujdari@gmail.com", // list of receivers
+    to: user.email, // list of receivers
     subject: "Demande de réservation de véhicule", // Subject line
     text: "Demande de réservation de véhicule", // plain text body
     html: `<b>Votre demande de réservation de véhicule a bien été envoyée à l'administrateur ${company} </b>
