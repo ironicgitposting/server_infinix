@@ -1,16 +1,36 @@
 // DB Object
-const bcrypt = require('bcrypt');
+const bcrypt = require("bcrypt");
 
-const jwt = require('jsonwebtoken');
-const db = require('../models');
+const jwt = require("jsonwebtoken");
+const db = require("../models");
+const MailController = require("./mails.controller");
 
 // Les Entités qu'on importe
-const { Booking } = db.sequelize.models;
+const { Booking, Vehicules, Site, User, Status } = db.sequelize.models;
 
 // Get all users
 exports.getBookings = async (req, res) => {
   try {
-    const booking = await Booking.findAll();
+    const booking = await Booking.findAll({
+      include: [
+        {
+          model: Vehicules,
+          as: Booking.lentVehicule,
+        },
+        {
+          model: Site,
+          as: Booking.departureSite,
+        },
+        {
+          model: User,
+          as: Booking.driver,
+        },
+        {
+          model: Status,
+          as: Booking.status,
+        },
+      ],
+    });
     res.status(200).json({
       booking,
     });
@@ -23,26 +43,31 @@ exports.getBookings = async (req, res) => {
 
 exports.createBooking = async (req, res) => {
   const {
-    vehicule,
+    driver,
+    lentVehicule,
     startDate,
     endDate,
     status,
-    departure
+    departureSite,
   } = req.body;
 
   try {
     const booking = new Booking({
-      vehicule,
+      driver,
+      lentVehicule,
       startDate,
       endDate,
       status,
-      departure
+      departureSite,
     });
 
     await booking.save();
 
+    //Envoie du mail de demande de réservation de véhicule
+    MailController.sendMailUserVehicleRequest(booking);
+
     res.status(200).json({
-      message: 'booking created',
+      message: "booking created",
     });
   } catch (error) {
     return res.status(500).json({
