@@ -24,15 +24,12 @@ exports.getUsers = async (req, res) => {
 
 exports.createUser = async (req, res) => {
   const {
-    registrationNumber,
     surname,
     name,
     profession,
     password,
     email,
     telephone,
-    authorizationAccess,
-    dateLastSeen,
     site,
     language,
     archived,
