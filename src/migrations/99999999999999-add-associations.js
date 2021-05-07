@@ -102,10 +102,19 @@ module.exports = {
             key: 'id'
           },
           onDelete: 'SET NULL'
-        });
+        }).then(() => {
+          return queryInterface.addColumn("Settings", "user", {
+            type: Sequelize.INTEGER,
+            references: {
+              model: "Users",
+              key: "id",
+            },
+            onDelete: "SET NULL",
+          })
+        })
+
       });
   },
-
   down: (queryInterface, Sequelize) => {
     return queryInterface
       .removeColumn(
@@ -126,6 +135,7 @@ module.exports = {
       })
       .then(() => {
         return queryInterface.removeColumn("Vehicules", "site");
+
       })
       .then(() => {
         return queryInterface.removeColumn('Bookings','departureSite');
@@ -138,6 +148,10 @@ module.exports = {
       })
       .then(() => {
         return queryInterface.removeColumn('Bookings','status');
+
+      }).then(() => {
+        return queryInterface.removeColumn("Settings", "user")
+
       });
   },
 };
