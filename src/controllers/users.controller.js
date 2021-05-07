@@ -135,6 +135,16 @@ exports.loginUser = async (req, res) => {
     where: {
       email,
     },
+    attributes: ['id',
+      'password',
+      'email',
+      'surname',
+      'name',
+      'authorizationAccess',
+      'language',
+      'enabled',
+      'profile'
+    ]
   })
     .then((user) => {
       if (!user) {
@@ -161,8 +171,10 @@ exports.loginUser = async (req, res) => {
           expiresIn: "1h",
         }
       );
+      fetchedUser.password = '';
       return res.status(200).json({
         token,
+        user: fetchedUser,
         expiresIn: 3600,
       });
     })
