@@ -12,16 +12,13 @@ const SettingsTypeEnum = Object.freeze({
 export function createSetting() {
 }
 
-export function readSetting() {
-}
-
 export function updateSetting() {
 }
 
 export function deleteSetting() {
 }
 
-export function getSettingsByUser() {
+export function getSettingsByUserId() {
 }
 
 
