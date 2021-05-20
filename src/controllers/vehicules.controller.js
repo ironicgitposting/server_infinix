@@ -5,12 +5,19 @@ const jwt = require('jsonwebtoken');
 const db = require('../models');
 
 // Les Entités qu'on importe
-const { Vehicules } = db.sequelize.models;
+const { Vehicule, Site, Status, User, Booking } = db.sequelize.models;
 
 // Get all users
 exports.getVehicules = async (req, res) => {
   try {
-    const vehicules = await Vehicules.findAll();
+    const vehicules = await Vehicule.findAll({
+      include: [
+        {
+          model: Site,
+          as: Vehicule.site,
+        }
+      ]
+    });
     res.status(200).json({
       vehicules,
     });
@@ -61,6 +68,7 @@ exports.createVehicule = async (req, res) => {
 
 exports.updateVehicule = async (req, res) => {
   const lastImmatriculation = req.params.immatriculation;
+  console.log(req.body);
   const { 
     type,
     libelle,
@@ -71,7 +79,7 @@ exports.updateVehicule = async (req, res) => {
     immatriculation,
     state
         } = req.body;
-
+console.log(req.body)
   await Vehicule.update({ 
     type,
     libelle,
