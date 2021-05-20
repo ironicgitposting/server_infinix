@@ -5,16 +5,17 @@ const jwt = require('jsonwebtoken');
 const db = require('../models');
 
 // Les Entités qu'on importe
-const { Vehicule } = db.sequelize.models;
+const { Vehicules } = db.sequelize.models;
 
 // Get all users
 exports.getVehicules = async (req, res) => {
   try {
-    const vehicules = await Vehicule.findAll();
+    const vehicules = await Vehicules.findAll();
     res.status(200).json({
       vehicules,
     });
   } catch (error) {
+    console.log(error);
     res.status(500).json({
       error,
     });
