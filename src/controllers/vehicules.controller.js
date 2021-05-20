@@ -80,7 +80,7 @@ exports.updateVehicule = async (req, res) => {
     immatriculation,
     state
         } = req.body;
-
+console.log(req.body)
   await Vehicule.update({ 
     type,
     libelle,
