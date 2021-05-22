@@ -30,15 +30,12 @@ exports.getSites = async (req, res) => {
 };
 
 exports.createSite = async (req, res) => {
-  const {
-    label,
-    status,
-  } = req.body;
+  const { label, status } = req.body;
 
   try {
     const site = new Site({
-      label
-      status
+      label,
+      status,
     });
 
     await site.save();

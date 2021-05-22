@@ -102,15 +102,6 @@ module.exports = {
             key: 'id'
           },
           onDelete: 'SET NULL'
-        }).then(() => {
-          return queryInterface.addColumn("Settings", "user", {
-            type: Sequelize.INTEGER,
-            references: {
-              model: "Users",
-              key: "id",
-            },
-            onDelete: "SET NULL",
-          })
         })
 
       });
