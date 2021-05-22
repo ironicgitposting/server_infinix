@@ -6,7 +6,7 @@ const db = require("../models");
 const MailController = require("./mails.controller");
 
 // Les Entités qu'on importe
-const { Booking, Vehicules, Site, User, Status } = db.sequelize.models;
+const { Booking, Vehicule, Site, User, Status } = db.sequelize.models;
 
 // Get all users
 exports.getBookings = async (req, res) => {
@@ -14,7 +14,7 @@ exports.getBookings = async (req, res) => {
     const booking = await Booking.findAll({
       include: [
         {
-          model: Vehicules,
+          model: Vehicule,
           as: Booking.lentVehicule,
         },
         {
@@ -48,17 +48,21 @@ exports.createBooking = async (req, res) => {
     startDate,
     endDate,
     status,
-    departureSite,
+    site,
   } = req.body;
+
+  const driverId = driver.id;
+  const statusId = status.id;
+  const siteId = site.id;
 
   try {
     const booking = new Booking({
-      driver,
+      driver: driverId,
       lentVehicule,
       startDate,
       endDate,
-      status,
-      departureSite,
+      status: statusId,
+      departureSite: siteId,
     });
 
     await booking.save();

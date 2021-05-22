@@ -1,20 +1,23 @@
 INSERT INTO public."Status"(id, label, "createdAt", "updatedAt", "familyStatus")     
-VALUES (1, 'en attente de validation', now(), now(), null);
+VALUES (1, 'En attente de validation', now(), now(), null);
 
 INSERT INTO public."Status"(id, label, "createdAt", "updatedAt", "familyStatus")     
-VALUES (2, 'en cours', now(), now(), null);
+VALUES (2, 'En cours', now(), now(), null);
 
 INSERT INTO public."Status"(id, label, "createdAt", "updatedAt", "familyStatus")     
-VALUES (3, 'cloturé', now(), now(), null);
+VALUES (3, 'Clôturé', now(), now(), null);
 
 INSERT INTO public."Status"(id, label, "createdAt", "updatedAt", "familyStatus")     
-VALUES (4, 'validé', now(), now(), null);
+VALUES (4, 'Validé', now(), now(), null);
 
 INSERT INTO public."Status"(id, label, "createdAt", "updatedAt", "familyStatus")     
-VALUES (5, 'en retard', now(), now(), null);
+VALUES (5, 'En retard', now(), now(), null);
 
 INSERT INTO public."Site"(id, label, adress, "postalCode", city, phone, mail, pays, "createdAt", "updatedAt", status) 
-VALUES (1, 'saint herblain', '2 rue de france', '44000', 'Nantes', '0251676352', null, null, now(), now(), null);
+VALUES (1, 'ENI Nantes', '3 Rue Michael Faraday', '44800', 'Saint-Herblain', '0251676352', null, null, now(), now(), null);
+
+INSERT INTO public."Site"(id, label, adress, "postalCode", city, phone, mail, pays, "createdAt", "updatedAt", status)
+VALUES (2, 'ENI Rennes', '8 Rue Léo Lagrange', '35131', 'Chartres-de-Bretagne', '0251676352', null, null, now(), now(), null);
 
 
 INSERT INTO public."Vehicules"(id, type, libelle, model, "flagService", "createdAt", "updatedAt", immatriculation, state, status, site)     
