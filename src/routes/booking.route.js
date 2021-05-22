@@ -1,14 +1,16 @@
 const express = require('express');
+const checkAuth = require('../middleware/checkAuth');
+
 
 const BookingController = require('../controllers/booking.controller');
 
 const router = express.Router();
 
 // Get booking
-router.get('', BookingController.getBookings);
+router.get('', checkAuth, BookingController.getBookings);
 
 // Create booking
-router.post('/create', BookingController.createBooking);
+router.post('/create', checkAuth, BookingController.createBooking);
 
 
 module.exports = router;

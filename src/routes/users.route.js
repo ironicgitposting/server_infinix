@@ -15,10 +15,10 @@ router.post('/login', UserController.loginUser);
 router.post('/signup', UserController.createUser);
 
 // Update user
-router.put('/update/:email', UserController.updateUser);
+router.put('/update/:email', checkAuth, UserController.updateUser);
 
 // Delete user
-router.post('/delete/:email', UserController.deleteUser);
+router.post('/delete/:email', checkAuth, UserController.deleteUser);
 
 
 module.exports = router;
