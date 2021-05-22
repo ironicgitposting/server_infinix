@@ -1,11 +1,12 @@
 const express = require('express');
 
 const UserController = require('../controllers/users.controller');
+const checkAuth = require('../middleware/checkAuth');
 
 const router = express.Router();
 
 // Get all users
-router.get('', UserController.getUsers);
+router.get( '', checkAuth, UserController.getUsers);
 
 // Login
 router.post('/login', UserController.loginUser);

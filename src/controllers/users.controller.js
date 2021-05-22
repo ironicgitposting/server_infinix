@@ -5,6 +5,7 @@ const jwt = require("jsonwebtoken");
 const db = require("../models");
 const MailController = require("./mails.controller");
 
+
 // Les Entités qu'on importe
 const { User } = db.sequelize.models;
 
