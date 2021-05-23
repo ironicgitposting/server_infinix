@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Vehicule.belongsTo(models.Status, { foreignKey: 'status'});
       Vehicule.belongsTo(models.Site, { foreignKey: 'site'});
+      Vehicule.hasMany(models.Booking, { foreignKey: 'lentVehicule'});
     }
   }
 

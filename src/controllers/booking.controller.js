@@ -79,3 +79,41 @@ exports.createBooking = async (req, res) => {
     });
   }
 };
+
+// Get all users
+exports.getBookingsForVehicle = async (req, res) => {
+  const immatriculation = req.params.immatriculation;
+  try {
+    const booking = await Booking.findAll({
+      include: [
+        {
+          model: Vehicule,
+          as: Booking.lentVehicule,
+        },
+        {
+          model: Site,
+          as: Booking.departureSite,
+        },
+        {
+          model: User,
+          as: Booking.driver,
+        },
+        {
+          model: Status,
+          as: Booking.status,
+        },
+      ],
+    }, {
+      where: { 
+        lentVehicule: immatriculation
+        }
+    });
+    res.status(200).json({
+      booking,
+    });
+  } catch (error) {
+    res.status(500).json({
+      error,
+    });
+  }
+};
