@@ -13,6 +13,6 @@ router.get('', checkAuth, BookingController.getBookings);
 router.post('/create', checkAuth, BookingController.createBooking);
 
 //Get booking for one vehicle
-router.get('/for-vehicle/:immatriculation', checkAuth, BookingController.getBookingsForVehicle);
+router.get('/for-vehicle/:id', checkAuth, BookingController.getBookingsForVehicle);
 
 module.exports = router;
