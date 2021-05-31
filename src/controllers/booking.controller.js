@@ -85,10 +85,27 @@ exports.getBookingsForVehicle = async (req, res) => {
   const idVehicle = req.params.id;
   try {
     const booking = await Booking.findAll({
-     
       where: { 
         lentVehicule: idVehicle
-        }
+        },
+      include: [
+          {
+            model: Vehicule,
+            as: Booking.lentVehicule,
+          },
+          {
+            model: Site,
+            as: Booking.departureSite,
+          },
+          {
+            model: User,
+            as: Booking.driver,
+          },
+          {
+            model: Status,
+            as: Booking.status,
+          },
+        ]  
     });
     res.status(200).json({
       booking,
