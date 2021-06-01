@@ -42,14 +42,7 @@ exports.getBookings = async (req, res) => {
 };
 
 exports.createBooking = async (req, res) => {
-  const {
-    driver,
-    lentVehicule,
-    startDate,
-    endDate,
-    status,
-    site,
-  } = req.body;
+  const { driver, lentVehicule, startDate, endDate, status, site } = req.body;
 
   const driverId = driver.id;
   const statusId = status.id;
@@ -82,9 +75,12 @@ exports.createBooking = async (req, res) => {
 
 // Get all users
 exports.getBookingsForVehicle = async (req, res) => {
-  const immatriculation = req.params.immatriculation;
+  const idVehicle = req.params.id;
   try {
     const booking = await Booking.findAll({
+      where: {
+        lentVehicule: idVehicle,
+      },
       include: [
         {
           model: Vehicule,
@@ -103,13 +99,113 @@ exports.getBookingsForVehicle = async (req, res) => {
           as: Booking.status,
         },
       ],
-    }, {
-      where: { 
-        lentVehicule: immatriculation
-        }
     });
     res.status(200).json({
       booking,
+    });
+  } catch (error) {
+    res.status(500).json({
+      error,
+    });
+  }
+};
+
+// Get all Bookings status=1
+exports.getAllBookingsStatus = async (req, res) => {
+  try {
+    const status = req.params.status;
+
+    Booking.findAndCountAll(
+      {
+        include: [
+          {
+            model: Site,
+            as: Booking.departureSite,
+          },
+          {
+            model: User,
+            as: Booking.driver,
+          },
+          {
+            model: Status,
+            as: Booking.status,
+          },
+        ],
+      },
+      {
+        where: {
+          status: status,
+        },
+      }
+    ).then((result) => {
+      res.status(200).json({
+        notificationCount: result,
+      });
+      console.log(result);
+      //console.log(result.rows);
+    });
+  } catch (error) {
+    res.status(500).json({
+      error,
+    });
+  }
+};
+
+// Get all Bookings status=1
+exports.getAllBookings = async (req, res) => {
+  try {
+    const email = req.params.email;
+    const status = req.params.status;
+    console.log("getAllBookings");
+
+    Booking.findAndCountAll({
+      include: [{ model: User, as: Booking.driver, where: { status: status } }],
+    }).then((result) => {
+      res.status(200).json({
+        notificationCount: result,
+      });
+      console.log(result);
+      //console.log(result.rows);
+    });
+  } catch (error) {
+    res.status(500).json({
+      error,
+    });
+  }
+};
+
+// Get all booking for one utilisateur
+exports.getBookingsForUtilisateur = async (req, res) => {
+  try {
+    const email = req.params.email;
+    Booking.findAndCountAll(
+      {
+        include: [
+          {
+            model: Site,
+            as: Booking.departureSite,
+          },
+          {
+            model: User,
+            as: Booking.driver,
+          },
+          {
+            model: Status,
+            as: Booking.status,
+          },
+        ],
+      },
+      {
+        where: {
+          email: email,
+        },
+      }
+    ).then((result) => {
+      res.status(200).json({
+        notificationCountBookingUser: result,
+      });
+      console.log(result);
+      //console.log(result.rows);
     });
   } catch (error) {
     res.status(500).json({
