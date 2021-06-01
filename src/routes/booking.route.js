@@ -14,6 +14,7 @@ router.post("/create", checkAuth, BookingController.createBooking);
 //Get booking for one vehicle
 router.get(
   "/for-vehicle/:immatriculation",
+  checkAuth,
   BookingController.getBookingsForVehicle
 );
 

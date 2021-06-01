@@ -6,6 +6,7 @@ const mailRoutes = require("./routes/mails.route");
 const vehiculeRoutes = require("./routes/vehicules.route");
 const bookingRoutes = require("./routes/booking.route");
 const siteRoutes = require("./routes/sites.route");
+const StatusRoutes = require("./routes/status.route");
 const corsMW = require("./middleware/cors");
 
 const app = express();
@@ -40,5 +41,6 @@ app.use(`${API_VERSION}/mails`, mailRoutes);
 app.use(`${API_VERSION}/vehicules`, vehiculeRoutes);
 app.use(`${API_VERSION}/booking`, bookingRoutes);
 app.use(`${API_VERSION}/sites`, siteRoutes);
+app.use(`${API_VERSION}/status`, StatusRoutes);
 
 module.exports = app;
