@@ -5,14 +5,14 @@ const jwt = require("jsonwebtoken");
 const db = require("../models");
 const MailController = require("./mails.controller");
 
-
 // Les Entités qu'on importe
 const { User } = db.sequelize.models;
 
 // Get all users
 exports.getUsers = async (req, res) => {
   try {
-    const users = await User.findAll();
+    const users = await User.findAll({ where: { archived: false || null } });
+
     res.status(200).json({
       users,
     });
@@ -90,17 +90,13 @@ exports.updateUser = async (req, res) => {
       console.log("User activated: " + userUpdated.enabled);
       // Mail d'activation ici
       MailController.sendMailUserActiverCompte(user);
-
     }
     if (propsUpdated.includes("enabled") && !userUpdated.enabled) {
       console.log("User deactivated: " + userUpdated.email);
       console.log("User deactivated: " + userUpdated.enabled);
-    // Mail de désactivation de compte utilisateur
-    MailController.sendMailUserDesactiverCompte(user);
-
+      // Mail de désactivation de compte utilisateur
+      MailController.sendMailUserDesactiverCompte(user);
     }
-
-
 
     res.status(200).json({
       message: "User updated",
@@ -115,89 +111,81 @@ exports.updateUser = async (req, res) => {
 exports.deleteUser = async (req, res) => {
   const { email } = req.params;
 
-  User.destroy({
-    where: {
-      email,
-    },
-  })
-    .then((result) => {
-      if (result === 1) {
-        res.send({
-          message: "User was deleted successfully",
-        });
-      } else {
-        res.send({
-          message: `Cannot delete user with email= ${email}, maybe it wasn'nt found`,
-        });
-      }
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message: `Could not delete user with email : ${email}`,
+  try {
+    const user = await User.findOne({ where: { email } });
+    if (user) {
+      user.archived = true;
+      await user.save();
+      return res.status(204).json({
+        message: "User archived successfully",
       });
+    }
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
     });
+  }
+  return res.status(400).json({
+    message: "Bad request",
+  });
 };
 
 exports.loginUser = async (req, res) => {
   let fetchedUser;
   const { email, password } = req.body;
-  User.findOne({
+  const user = await User.findOne({
     where: {
       email,
     },
-    attributes: ['id',
-      'password',
-      'email',
-      'surname',
-      'name',
-      'authorizationAccess',
-      'language',
-      'enabled',
-      'profile'
-    ]
-  })
-    .then((user) => {
-      if (!user) {
-        return res.status(401).json({
-          message: "Auth failure",
-        });
-      }
-      fetchedUser = user;
-      return bcrypt.compare(password, fetchedUser.password);
-    })
-    .then((result) => {
-      if (!result) {
-        return res.status(401).json({
-          message: "Auth failure",
-        });
-      }
-      const token = jwt.sign(
-        {
-          email: fetchedUser.email,
-          userId: fetchedUser.id,
-        },
-        "my_secret_key",
-        {
-          expiresIn: "1h",
-        }
-      );
-      fetchedUser.password = '';
-      return res.status(200).json({
-        token,
-        user: fetchedUser,
-        expiresIn: 3600,
-      });
-    })
-    .catch((err) =>
-      res.status(401).json({
+    attributes: [
+      "id",
+      "password",
+      "email",
+      "surname",
+      "name",
+      "authorizationAccess",
+      "language",
+      "enabled",
+      "profile",
+      "dateLastSeen",
+    ],
+  });
+
+  if (!user) {
+    return res.status(401).json({
+      message: "Auth failure",
+    });
+  } else {
+    fetchedUser = user;
+    const validLogin = bcrypt.compare(password, fetchedUser.password);
+    if (!validLogin) {
+      return res.status(401).json({
         message: "Auth failure",
-      })
+      });
+    }
+    const token = jwt.sign(
+      {
+        email: fetchedUser.email,
+        userId: fetchedUser.id,
+      },
+      "my_secret_key",
+      {
+        expiresIn: "1h",
+      }
     );
+    user.dateLastSeen = Date.now();
+    await user.save();
+    fetchedUser.password = "";
+    return res.status(200).json({
+      token,
+      user: fetchedUser,
+      expiresIn: 3600,
+    });
+  }
 };
 
 // Get all users
 exports.getUserById = async (req, res) => {
-
   //console.log("reponse :", req);
   try {
     return User.findOne({ where: { id: req } });

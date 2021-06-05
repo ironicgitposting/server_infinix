@@ -1,13 +1,18 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-
+// Routes
 const userRoutes = require("./routes/users.route");
 const mailRoutes = require("./routes/mails.route");
 const vehiculeRoutes = require("./routes/vehicules.route");
 const bookingRoutes = require("./routes/booking.route");
 const siteRoutes = require("./routes/sites.route");
 const StatusRoutes = require("./routes/status.route");
+
+// Middlewares
 const corsMW = require("./middleware/cors");
+
+// Jobs
+const initJobs = require("./jobs/");
 
 const app = express();
 
@@ -34,6 +39,7 @@ app.get(`${API_VERSION}/`, (req, res) => {
 });
 
 // Launch Jobs
+initJobs();
 
 // Activated routes
 app.use(`${API_VERSION}/users`, userRoutes);
