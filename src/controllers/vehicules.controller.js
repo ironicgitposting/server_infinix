@@ -41,12 +41,14 @@ exports.createVehicule = async (req, res) => {
     immatriculation,
     state
   } = req.body;
+  
+  const siteId = site.id;
 
   try {
     const vehicule = new Vehicule({
       type,
       libelle,
-      site,
+      site: siteId,
       model,
       flagService,
       status,
@@ -69,7 +71,7 @@ exports.createVehicule = async (req, res) => {
 
 exports.updateVehicule = async (req, res) => {
   const lastImmatriculation = req.params.immatriculation;
-  console.log(req.body);
+  
   const { 
     type,
     libelle,
@@ -80,11 +82,12 @@ exports.updateVehicule = async (req, res) => {
     immatriculation,
     state
         } = req.body;
-console.log(req.body)
+        const siteId = site.id;
+        console.log(siteId);
   await Vehicule.update({ 
     type,
     libelle,
-    site,
+    site: siteId,
     model,
     flagService,
     status,

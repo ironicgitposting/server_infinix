@@ -75,7 +75,7 @@ exports.createBooking = async (req, res) => {
 
 // Get all users
 exports.getBookingsForVehicle = async (req, res) => {
-  const idVehicle = req.params.id;
+  const idVehicle = req.params.immatriculation;
   try {
     const booking = await Booking.findAll({
       where: {

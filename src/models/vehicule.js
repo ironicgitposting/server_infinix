@@ -27,7 +27,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       type: DataTypes.INTEGER,
       libelle: DataTypes.STRING,
-      site: DataTypes.STRING,
+      site: DataTypes.INTEGER,
       model: DataTypes.STRING,
       flagService: DataTypes.BOOLEAN,
       status: DataTypes.INTEGER,
