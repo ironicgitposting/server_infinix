@@ -32,7 +32,7 @@ module.exports = (sequelize, DataTypes) => {
       flagService: DataTypes.BOOLEAN,
       status: DataTypes.INTEGER,
       immatriculation: DataTypes.STRING,
-      state: DataTypes.INTEGER,
+      state: DataTypes.STRING,
     },
     {
       sequelize,

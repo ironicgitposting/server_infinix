@@ -39,7 +39,7 @@ module.exports = {
       },
 
       state: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
       },
     });
   },

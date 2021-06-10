@@ -82,8 +82,8 @@ exports.updateVehicule = async (req, res) => {
     immatriculation,
     state
         } = req.body;
-        const siteId = site.id;
-        console.log(siteId);
+  const siteId = site.id;
+  
   await Vehicule.update({ 
     type,
     libelle,
