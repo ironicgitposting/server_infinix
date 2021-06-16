@@ -102,8 +102,28 @@ module.exports = {
             key: 'id'
           },
           onDelete: 'SET NULL'
-        })
+        });
 
+      })
+      .then(() => {
+        return queryInterface.addColumn('Sinisters','status',{
+            type: Sequelize.INTEGER,
+            references:{
+              model: 'Status',
+              key: 'id'
+            },
+            onDelete: 'SET NULL'
+          });
+      })
+      .then(() => {
+        return queryInterface.addColumn('Sinisters','idVehicle',{
+            type: Sequelize.INTEGER,
+            references:{
+              model: 'Vehicules',
+              key: 'id'
+            },
+            onDelete: 'SET NULL'
+          });
       });
   },
   down: (queryInterface, Sequelize) => {
