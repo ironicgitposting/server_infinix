@@ -184,7 +184,7 @@ exports.loginUser = async (req, res) => {
   }
 };
 
-// Get all users
+// Get one users
 exports.getUserById = async (req, res) => {
   //console.log("reponse :", req);
   try {

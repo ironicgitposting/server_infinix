@@ -25,9 +25,6 @@ router.get("/status/:status&:email", BookingController.getAllBookings);
 router.get("/status/:status", BookingController.getAllBookingsStatus);
 
 //Get booking with one utilisateur
-router.get(
-  "/for-utilisateur/:email",
-  BookingController.getBookingsForUtilisateur
-);
+router.get("/for-utilisateur/:id", BookingController.getBookingsForUtilisateur);
 
 module.exports = router;

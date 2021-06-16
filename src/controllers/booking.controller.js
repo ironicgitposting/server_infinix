@@ -115,29 +115,25 @@ exports.getAllBookingsStatus = async (req, res) => {
   try {
     const status = req.params.status;
 
-    Booking.findAndCountAll(
-      {
-        include: [
-          {
-            model: Site,
-            as: Booking.departureSite,
-          },
-          {
-            model: User,
-            as: Booking.driver,
-          },
-          {
-            model: Status,
-            as: Booking.status,
-          },
-        ],
+    Booking.findAndCountAll({
+      where: {
+        status: status,
       },
-      {
-        where: {
-          status: status,
+      include: [
+        {
+          model: Site,
+          as: Booking.departureSite,
         },
-      }
-    ).then((result) => {
+        {
+          model: User,
+          as: Booking.driver,
+        },
+        {
+          model: Status,
+          as: Booking.status,
+        },
+      ],
+    }).then((result) => {
       res.status(200).json({
         notificationCount: result,
       });
@@ -177,30 +173,26 @@ exports.getAllBookings = async (req, res) => {
 // Get all booking for one utilisateur
 exports.getBookingsForUtilisateur = async (req, res) => {
   try {
-    const email = req.params.email;
-    Booking.findAndCountAll(
-      {
-        include: [
-          {
-            model: Site,
-            as: Booking.departureSite,
-          },
-          {
-            model: User,
-            as: Booking.driver,
-          },
-          {
-            model: Status,
-            as: Booking.status,
-          },
-        ],
+    const UserId = req.params.id;
+    Booking.findAndCountAll({
+      where: {
+        driver: UserId,
       },
-      {
-        where: {
-          email: email,
+      include: [
+        {
+          model: Site,
+          as: Booking.departureSite,
         },
-      }
-    ).then((result) => {
+        {
+          model: User,
+          as: Booking.driver,
+        },
+        {
+          model: Status,
+          as: Booking.status,
+        },
+      ],
+    }).then((result) => {
       res.status(200).json({
         notificationCountBookingUser: result,
       });

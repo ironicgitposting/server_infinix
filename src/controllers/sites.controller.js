@@ -10,8 +10,31 @@ const { Site } = db.sequelize.models;
 
 // Get all users
 exports.getSites = async (req, res) => {
+  const status = req.params.status;
   try {
-    const sites = await Site.findAll();
+    const sites = await Site.findAll({
+      where: {
+        status: 1000,
+      },
+    });
+    res.status(200).json({
+      sites,
+    });
+  } catch (error) {
+    res.status(500).json({
+      error,
+    });
+  }
+};
+
+// Get all users
+exports.getSitesAvailable = async (req, res) => {
+  try {
+    const sites = await Site.findAll({
+      where: {
+        status: 1000,
+      },
+    });
     res.status(200).json({
       sites,
     });
@@ -23,6 +46,7 @@ exports.getSites = async (req, res) => {
 };
 
 exports.createSite = async (req, res) => {
+  const status = 1000;
   const { label, adress, postalCode, city, phone, mail, pays } = req.body;
 
   try {
@@ -34,6 +58,7 @@ exports.createSite = async (req, res) => {
       phone,
       mail,
       pays,
+      status,
     });
     console.log("site", site);
     await site.save();
@@ -49,49 +74,90 @@ exports.createSite = async (req, res) => {
 };
 
 exports.updateSite = async (req, res) => {
-  const { label } = req.params;
-  const propsToUpdate = { ...req.body };
-  const site = await Site.findOne({ where: { label } });
-  if (!site) {
-    throw Error(`Site not updated. label: ${label}`);
-  }
-
-  try {
-    const propsUpdated = site.changed();
-    const siteUpdated = await site.save();
-
-    res.status(200).json({
-      message: "Site updated",
-    });
-  } catch (error) {
-    return res.status(500).json({
-      message: error.message,
-    });
-  }
-};
-
-exports.deleteSite = async (req, res) => {
-  const { label } = req.params;
-
-  Site.destroy({
-    where: {
+  const lastlabel = req.params.label;
+  const { label, adress, postalCode, city, phone, mail, pays } = req.body;
+  console.log(req.body);
+  await Site.update(
+    {
       label,
+      adress,
+      postalCode,
+      city,
+      phone,
+      mail,
+      pays,
     },
-  })
+    {
+      where: {
+        label: lastlabel,
+      },
+    }
+  )
     .then((result) => {
-      if (result === 1) {
+      if (result) {
         res.send({
-          message: "Site was deleted successfully",
+          message: "Site updated successfully",
         });
       } else {
         res.send({
-          message: `Cannot delete user with email= ${label}, maybe it wasn'nt found`,
+          message:
+            "Something went wrong when trying to update site with id= " +
+            req.params.id +
+            ", maybe it was not found",
         });
       }
     })
     .catch((err) => {
+      console.log("erreur " + err);
       res.status(500).send({
-        message: `Could not delete user with email : ${label}`,
+        message: "Error updating site with id = " + req.params.id,
       });
     });
+};
+
+exports.deleteSite = async (req, res) => {
+  const id = req.params.id;
+  const { label, adress, postalCode, city, phone, mail, pays } = req.body;
+  const status = 2000;
+  console.log(req.body);
+  await Site.update(
+    {
+      status,
+    },
+    {
+      where: {
+        id: id,
+      },
+    }
+  )
+    .then((result) => {
+      if (result) {
+        res.send({
+          message: "Site updated successfully",
+        });
+      } else {
+        res.send({
+          message:
+            "Something went wrong when trying to update site with id= " +
+            req.params.id +
+            ", maybe it was not found",
+        });
+      }
+    })
+    .catch((err) => {
+      console.log("erreur " + err);
+      res.status(500).send({
+        message: "Error updating site with id = " + req.params.id,
+      });
+    });
+};
+
+// Get one users
+exports.getSiteById = async (req, res) => {
+  //console.log("reponse :", req);
+  try {
+    return Site.findOne({ where: { id: req } });
+  } catch (error) {
+    throw "impossible de trouver le site avec la clé " + req.id;
+  }
 };
