@@ -24,6 +24,9 @@ VALUES (1000, 'Site Ouvert', now(), now(), 1);
 INSERT INTO public."Status"(id, label, "createdAt", "updatedAt", "familyStatus")     
 VALUES (2000, 'Site Fermé', now(), now(), 1);
 
+INSERT INTO public."Status"(id, label, "createdAt", "updatedAt", "familyStatus")
+VALUES (6, 'Annulé', now(), now(), null);
+
 INSERT INTO public."Site"(id, label, adress, "postalCode", city, phone, mail, pays, "createdAt", "updatedAt", status) 
 VALUES (1, 'ENI Nantes', '3 Rue Michael Faraday', '44800', 'Saint-Herblain', '0251676352', 'eni@campus.fr', 'France', now(), now(), 1000);
 
