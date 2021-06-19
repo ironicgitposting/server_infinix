@@ -6,7 +6,7 @@ const BookingController = require('../controllers/booking.controller');
 const router = express.Router();
 
 // Get booking
-router.get("", checkAuth, BookingController.getBookings);
+router.get("/:userId&:userProfile", checkAuth, BookingController.getBookings);
 
 // Create booking
 router.post("/create", checkAuth, BookingController.createBooking);

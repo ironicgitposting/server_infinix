@@ -10,6 +10,16 @@ const { Booking, Vehicule, Site, User, Status } = db.sequelize.models;
 
 // Get all users
 exports.getBookings = async (req, res) => {
+  const {
+    userId,
+    userProfile
+  } = req.params;
+  let whereClause = {};
+  if (userProfile !== '1') {
+    whereClause = {
+      driver: userId
+    }
+  }
   try {
     const booking = await Booking.findAll({
       include: [
@@ -34,6 +44,7 @@ exports.getBookings = async (req, res) => {
           as: Booking.status,
         },
       ],
+      where: whereClause
     });
     res.status(200).json({
       booking,
