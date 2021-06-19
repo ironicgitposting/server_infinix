@@ -12,13 +12,26 @@
  * en cas de litiges.
  *
  */
+const moment = require("moment");
 const db = require("../../models");
 const { User } = db.sequelize.models;
-module.exports = async (months) => {
-  // Get ALl users
+const crypto = require("crypto");
+module.exports = async ({ unit, delay }) => {
+  // Get ALl users last login > delay unit
+  const pastMoment = moment().subtract(delay, unit).toDate();
   const users = await User.findAll();
-  console.log();
-  // Archive all users date last login > 24 mois
-
-  // Anononymize all archived users date last login > 24 months
+  users.forEach(async (user) => {
+    if (user.archived && !(user.dateLastSeen > pastMoment)) {
+      user.name = crypto.randomBytes(6).toString("hex");
+      user.surname = crypto.randomBytes(6).toString("hex");
+      // On repasse user.archived à null pour éviter de remodifier cet user tous les
+      // soirs
+      user.archived = null;
+      user.email =
+        crypto.randomBytes(6).toString("hex") +
+        "@" +
+        crypto.randomBytes(6).toString("hex");
+      await user.save();
+    }
+  });
 };
