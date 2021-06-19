@@ -1,7 +1,7 @@
 const express = require("express");
 const checkAuth = require("../middleware/checkAuth");
 
-const BookingController = require("../controllers/booking.controller");
+const BookingController = require('../controllers/booking.controller');
 
 const router = express.Router();
 
@@ -10,6 +10,9 @@ router.get("", checkAuth, BookingController.getBookings);
 
 // Create booking
 router.post("/create", checkAuth, BookingController.createBooking);
+
+// Update booking
+router.post('/update', checkAuth, BookingController.updateBooking);
 
 //Get booking for one vehicle
 router.get(
@@ -25,9 +28,6 @@ router.get("/status/:status&:email", BookingController.getAllBookings);
 router.get("/status/:status", BookingController.getAllBookingsStatus);
 
 //Get booking with one utilisateur
-router.get(
-  "/for-utilisateur/:email",
-  BookingController.getBookingsForUtilisateur
-);
+router.get("/for-utilisateur/:id", BookingController.getBookingsForUtilisateur);
 
 module.exports = router;

@@ -19,7 +19,11 @@ exports.getBookings = async (req, res) => {
         },
         {
           model: Site,
-          as: Booking.departureSite,
+          as: "departureSite",
+        },
+        {
+          model: Site,
+          as: "arrivalSite",
         },
         {
           model: User,
@@ -42,11 +46,20 @@ exports.getBookings = async (req, res) => {
 };
 
 exports.createBooking = async (req, res) => {
-  const { driver, lentVehicule, startDate, endDate, status, site } = req.body;
+  const {
+    driver,
+    lentVehicule,
+    startDate,
+    endDate,
+    status,
+    departureSite,
+    arrivalSite
+  } = req.body;
 
   const driverId = driver.id;
   const statusId = status.id;
-  const siteId = site.id;
+  const departureSiteId = departureSite.id;
+  const arrivalSiteId = arrivalSite.id;
 
   try {
     const booking = new Booking({
@@ -55,9 +68,9 @@ exports.createBooking = async (req, res) => {
       startDate,
       endDate,
       status: statusId,
-      departureSite: siteId,
+      departure_site: departureSiteId,
+      arrival_site: arrivalSiteId
     });
-
     await booking.save();
 
     //Envoie du mail de demande de réservation de véhicule
@@ -75,7 +88,7 @@ exports.createBooking = async (req, res) => {
 
 // Get all users
 exports.getBookingsForVehicle = async (req, res) => {
-  const idVehicle = req.params.id;
+  const idVehicle = req.params.immatriculation;
   try {
     const booking = await Booking.findAll({
       where: {
@@ -88,7 +101,11 @@ exports.getBookingsForVehicle = async (req, res) => {
         },
         {
           model: Site,
-          as: Booking.departureSite,
+          as: "departureSite",
+        },
+        {
+          model: Site,
+          as: "arrivalSite",
         },
         {
           model: User,
@@ -115,34 +132,32 @@ exports.getAllBookingsStatus = async (req, res) => {
   try {
     const status = req.params.status;
 
-    Booking.findAndCountAll(
-      {
-        include: [
-          {
-            model: Site,
-            as: Booking.departureSite,
-          },
-          {
-            model: User,
-            as: Booking.driver,
-          },
-          {
-            model: Status,
-            as: Booking.status,
-          },
-        ],
+    Booking.findAndCountAll({
+      where: {
+        status: status,
       },
-      {
-        where: {
-          status: status,
+      include: [
+        {
+          model: Site,
+          as: "departureSite",
         },
-      }
-    ).then((result) => {
+        {
+          model: Site,
+          as: "arrivalSite",
+        },
+        {
+          model: User,
+          as: Booking.driver,
+        },
+        {
+          model: Status,
+          as: Booking.status,
+        },
+      ],
+    }).then((result) => {
       res.status(200).json({
         notificationCount: result,
       });
-      console.log(result);
-      //console.log(result.rows);
     });
   } catch (error) {
     res.status(500).json({
@@ -156,7 +171,6 @@ exports.getAllBookings = async (req, res) => {
   try {
     const email = req.params.email;
     const status = req.params.status;
-    console.log("getAllBookings");
 
     Booking.findAndCountAll({
       include: [{ model: User, as: Booking.driver, where: { status: status } }],
@@ -164,8 +178,6 @@ exports.getAllBookings = async (req, res) => {
       res.status(200).json({
         notificationCount: result,
       });
-      console.log(result);
-      //console.log(result.rows);
     });
   } catch (error) {
     res.status(500).json({
@@ -177,39 +189,82 @@ exports.getAllBookings = async (req, res) => {
 // Get all booking for one utilisateur
 exports.getBookingsForUtilisateur = async (req, res) => {
   try {
-    const email = req.params.email;
-    Booking.findAndCountAll(
-      {
-        include: [
-          {
-            model: Site,
-            as: Booking.departureSite,
-          },
-          {
-            model: User,
-            as: Booking.driver,
-          },
-          {
-            model: Status,
-            as: Booking.status,
-          },
-        ],
+    const UserId = req.params.id;
+    Booking.findAndCountAll({
+      where: {
+        driver: UserId,
       },
-      {
-        where: {
-          email: email,
+      include: [
+        {
+          model: Site,
+          as: "departureSite",
         },
-      }
-    ).then((result) => {
+        {
+          model: Site,
+          as: "arrivalSite",
+        },
+        {
+          model: User,
+          as: Booking.driver,
+        },
+        {
+          model: Status,
+          as: Booking.status,
+        },
+      ],
+    }).then((result) => {
       res.status(200).json({
         notificationCountBookingUser: result,
       });
-      console.log(result);
-      //console.log(result.rows);
     });
   } catch (error) {
     res.status(500).json({
       error,
     });
   }
+};
+
+exports.updateBooking = async (req, res) => {
+  const {
+    id,
+    driver,
+    lentVehicule,
+    departureSite,
+    arrivalSite,
+    status,
+    startDate,
+    endDate
+  } = req.body;
+
+  await Booking.update({
+    driver: driver.id,
+    lentVehicule: lentVehicule?.id || null,
+    departure_site: departureSite.id,
+    arrival_site: arrivalSite.id,
+    status: status.id,
+    startDate,
+    endDate}, {
+    where: {
+      id:id
+    }
+  }).then( (result) => {
+    if (result === 1){
+
+      res.status(200).send({
+        message: "Loan updated successfully"
+      });
+
+    } else {
+
+      res.send({
+        message: "Something went wrong when trying to update loan with id= "+ id +", maybe it was not found"
+      });
+
+    }
+  }).catch(err => {
+    console.log('erreur '+err);
+    res.status(500).send({
+      message: "Error updating loan with id = " + id
+    });
+  });
 };
