@@ -26,9 +26,9 @@ module.exports = (sequelize, DataTypes) => {
             description: DataTypes.STRING,
             flag: DataTypes.INTEGER
         }, {
-            sequelize,
-            modelName: 'Setting',
-        })
+        sequelize,
+        modelName: 'Setting',
+    })
     return Setting;
 };
 

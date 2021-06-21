@@ -249,17 +249,18 @@ exports.updateBooking = async (req, res) => {
 
   await Booking.update({
     driver: driver.id,
-    lentVehicule: lentVehicule?.id || null,
+    lentVehicule: lentVehicule.id || null,
     departure_site: departureSite.id,
     arrival_site: arrivalSite.id,
     status: status.id,
     startDate,
-    endDate}, {
+    endDate
+  }, {
     where: {
-      id:id
+      id: id
     }
-  }).then( (result) => {
-    if (result === 1){
+  }).then((result) => {
+    if (result === 1) {
 
       res.status(200).send({
         message: "Loan updated successfully"
@@ -268,12 +269,12 @@ exports.updateBooking = async (req, res) => {
     } else {
 
       res.send({
-        message: "Something went wrong when trying to update loan with id= "+ id +", maybe it was not found"
+        message: "Something went wrong when trying to update loan with id= " + id + ", maybe it was not found"
       });
 
     }
   }).catch(err => {
-    console.log('erreur '+err);
+    console.log('erreur ' + err);
     res.status(500).send({
       message: "Error updating loan with id = " + id
     });
