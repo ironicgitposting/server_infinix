@@ -10,9 +10,23 @@ const SettingsTypeEnum = Object.freeze({
 });
 
 export function updateSetting() {
+    // Check if current user is admin
+
+
 }
 
-export function getSettingsByUserId() {
+export function getSettings() {
+    try {
+        const settings = await Setting.findAll();
+
+        res.status(200).json({
+            settings,
+        });
+    } catch (error) {
+        res.status(500).json({
+            error,
+        });
+    }
 }
 
 
