@@ -1,6 +1,6 @@
 // DB Object
 const db = require("../models");
-const { User, Setting } = db.sequelize.models;
+const { Setting } = db.sequelize.models;
 
 const SettingsTypeEnum = Object.freeze({
     "GENERAL": 0,
@@ -9,13 +9,13 @@ const SettingsTypeEnum = Object.freeze({
     "CARPOOLING": 3,  // Co-Voiturage
 });
 
-export function updateSetting() {
+exports.updateSetting = async (req, res) => {
     // Check if current user is admin
 
 
 }
 
-export function getSettings() {
+exports.getSettings = async (req, res) => {
     try {
         const settings = await Setting.findAll();
 
