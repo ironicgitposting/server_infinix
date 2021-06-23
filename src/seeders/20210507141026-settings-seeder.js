@@ -18,6 +18,22 @@ module.exports = {
         createdAt: Sequelize.fn('NOW'),
         updatedAt: Sequelize.fn('NOW')
       },
+      {
+        type: 1,
+        label: "Activation Utilisateur",
+        description: "Envoie un mail à l'utilisateur après l'activation de celui-ci.",
+        flag: 0,
+        createdAt: Sequelize.fn('NOW'),
+        updatedAt: Sequelize.fn('NOW')
+      },
+      {
+        type: 1,
+        label: "Desactivation Utilisateur",
+        description: "Envoie un mail à l'utilisateur après la désactivation de celui-ci.",
+        flag: 0,
+        createdAt: Sequelize.fn('NOW'),
+        updatedAt: Sequelize.fn('NOW')
+      },
     ]),
 
   down: async (queryInterface, Sequelize) =>

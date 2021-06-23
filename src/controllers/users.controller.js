@@ -6,7 +6,7 @@ const db = require("../models");
 const MailController = require("./mails.controller");
 
 // Les Entités qu'on importe
-const { User } = db.sequelize.models;
+const { User, Setting } = db.sequelize.models;
 
 // Get all users
 exports.getUsers = async (req, res) => {
@@ -89,13 +89,19 @@ exports.updateUser = async (req, res) => {
       console.log("User activated: " + userUpdated.email);
       console.log("User activated: " + userUpdated.enabled);
       // Mail d'activation ici
-      MailController.sendMailUserActiverCompte(user);
+      const mailSetting = await Setting.findOne({ where: { label: "Activation Utilisateur" } })
+      if (mailSetting && Boolean(mailSetting.flag)) {
+        MailController.sendMailUserActiverCompte(user);
+      }
     }
     if (propsUpdated.includes("enabled") && !userUpdated.enabled) {
       console.log("User deactivated: " + userUpdated.email);
       console.log("User deactivated: " + userUpdated.enabled);
       // Mail de désactivation de compte utilisateur
-      MailController.sendMailUserDesactiverCompte(user);
+      const mailSetting = await Setting.findOne({ where: { label: "Desactivation Utilisateur" } })
+      if (mailSetting && Boolean(mailSetting.flag)) {
+        MailController.sendMailUserDesactiverCompte(user);
+      }
     }
 
     res.status(200).json({
