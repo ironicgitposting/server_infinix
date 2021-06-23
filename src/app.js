@@ -1,5 +1,4 @@
 const express = require("express");
-const bodyParser = require("body-parser");
 // Routes
 const userRoutes = require("./routes/users.route");
 const mailRoutes = require("./routes/mails.route");
@@ -26,12 +25,8 @@ app.use(
   })
 );
 
-app.use(bodyParser.json());
-app.use(
-  bodyParser.urlencoded({
-    extended: false,
-  })
-);
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.get(`${API_VERSION}/`, (req, res) => {
   res.status(200).json({
