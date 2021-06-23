@@ -9,6 +9,6 @@ const router = express.Router();
 router.get('', checkAuth, SettingsController.getSettings);
 
 // Update Setting
-router.get('/update/:id', checkAuth, SettingsController.updateSetting);
+router.put('/update/:id', checkAuth, SettingsController.updateSetting);
 
 module.exports = router;

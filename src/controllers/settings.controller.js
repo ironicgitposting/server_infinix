@@ -11,8 +11,20 @@ const SettingsTypeEnum = Object.freeze({
 
 exports.updateSetting = async (req, res) => {
     // Check if current user is admin
-
-
+    try {
+        let setting = await Setting.findOne({ where: { label: req.body.label } })
+        if (setting) {
+            setting.flag = req.body.flag;
+            await setting.save();
+            return res.status(200).json({
+                message: "Setting updated"
+            });
+        }
+    } catch (error) {
+        return res.status(500).json({
+            error,
+        });
+    }
 }
 
 exports.getSettings = async (req, res) => {
