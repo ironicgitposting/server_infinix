@@ -317,6 +317,6 @@ getMailPasswordReset = async (transporter, user, tkn) => {
     to: user.email, // list of receivers
     subject: "Réinitialisation mot de passe", // Subject line
     text: "Réinitialisation mot de passe", // plain text body
-    html: `<a>http://localhost:4200/passwordReset/${user.id}/${tkn}</a>`, // html body
+    html: `<a href="http://localhost:4200/reset/${user.id}/${tkn}">Réinitiation du mot de passe</a>`, // html body
   });
 };

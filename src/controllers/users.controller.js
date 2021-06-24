@@ -117,23 +117,31 @@ exports.updateUser = async (req, res) => {
 exports.initPasswordReset = async (req, res) => {
   const { email } = req.params;
   const user = await User.findOne({ where: { email } });
+  try {
+    if (user) {
+      const tempToken = jwt.sign(
+        {
+          email: user.email,
+          userId: user.id,
+        },
+        "my_secret_key",
+        {
+          expiresIn: "10m",
+        }
+      );
 
-  if (user) {
-    const tempToken = jwt.sign(
-      {
-        email: user.email,
-        userId: user.id,
-      },
-      "my_secret_key",
-      {
-        expiresIn: "10m",
-      }
-    );
+      MailController.sendResetPasswordForm(user, tempToken);
 
-    MailController.sendResetPasswordForm(user, tempToken);
+    }
+    res.status(200).json({
+      message: `If a matching account was found an email was sent to ${email} to allow you to reset your password.
+`,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
   }
-
-
 }
 
 exports.resetPassword = async (req, res) => {
