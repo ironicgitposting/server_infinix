@@ -235,7 +235,7 @@ getMailUserActiverCompte = async (transporter, user) => {
 /**
  * Mail Désasctivation de Compte
  */
- exports.sendMailUserDesactiverCompte = (user) => {
+exports.sendMailUserDesactiverCompte = (user) => {
   console.log(user.email);
   // async..await is not allowed in global scope, must use a wrapper
   async function main() {
@@ -280,3 +280,43 @@ getMailUserDesactiverCompte = async (transporter, user) => {
 };
 
 
+/**
+ * Mail Reset Password
+ */
+
+exports.sendResetPasswordForm = (user, tkn) => {
+  console.log(user.email);
+  // async..await is not allowed in global scope, must use a wrapper
+  async function main() {
+    // create reusable transporter object using the default SMTP transport
+    let transporter = getGMailTransport();
+
+    // send mail with defined transport object
+    let info = await getMailPasswordReset(transporter, user, tkn);
+
+    //let info2 = await getMailAdministrateurVehicleRequest(transporter);
+
+    console.log("Message sent: %s", info.messageId);
+    // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
+
+    //console.log("Message sent: %s", info2.messageId);
+    // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
+
+    // Preview only available when sending through an Ethereal account
+    console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+    // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
+  }
+
+  main().catch(console.error);
+};
+
+getMailPasswordReset = async (transporter, user, tkn) => {
+
+  return transporter.sendMail({
+    from: '"Réinitialisation mot de passe - Infinix" <infinix.supp@gmail.com>', // sender address
+    to: user.email, // list of receivers
+    subject: "Réinitialisation mot de passe", // Subject line
+    text: "Réinitialisation mot de passe", // plain text body
+    html: `<a>http://localhost:4200/passwordReset/${user.id}/${tkn}</a>`, // html body
+  });
+};

@@ -114,6 +114,32 @@ exports.updateUser = async (req, res) => {
   }
 };
 
+exports.initPasswordReset = async (req, res) => {
+  const { email } = req.params;
+  const user = await User.findOne({ where: { email } });
+
+  if (user) {
+    const tempToken = jwt.sign(
+      {
+        email: user.email,
+        userId: user.id,
+      },
+      "my_secret_key",
+      {
+        expiresIn: "10m",
+      }
+    );
+
+    MailController.sendResetPasswordForm(user, tempToken);
+  }
+
+
+}
+
+exports.resetPassword = async (req, res) => {
+
+}
+
 exports.deleteUser = async (req, res) => {
   const { email } = req.params;
 
