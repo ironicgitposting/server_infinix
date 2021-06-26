@@ -89,7 +89,9 @@ exports.updateUser = async (req, res) => {
       console.log("User activated: " + userUpdated.email);
       console.log("User activated: " + userUpdated.enabled);
       // Mail d'activation ici
-      const mailSetting = await Setting.findOne({ where: { label: "Activation Utilisateur" } })
+      const mailSetting = await Setting.findOne({
+        where: { label: "Activation Utilisateur" },
+      });
       if (mailSetting && Boolean(mailSetting.flag)) {
         MailController.sendMailUserActiverCompte(user);
       }
@@ -98,7 +100,9 @@ exports.updateUser = async (req, res) => {
       console.log("User deactivated: " + userUpdated.email);
       console.log("User deactivated: " + userUpdated.enabled);
       // Mail de désactivation de compte utilisateur
-      const mailSetting = await Setting.findOne({ where: { label: "Desactivation Utilisateur" } })
+      const mailSetting = await Setting.findOne({
+        where: { label: "Desactivation Utilisateur" },
+      });
       if (mailSetting && Boolean(mailSetting.flag)) {
         MailController.sendMailUserDesactiverCompte(user);
       }
@@ -131,7 +135,6 @@ exports.initPasswordReset = async (req, res) => {
       );
 
       MailController.sendResetPasswordForm(user, tempToken);
-
     }
     res.status(200).json({
       message: `If a matching account was found an email was sent to ${email} to allow you to reset your password.
@@ -142,11 +145,33 @@ exports.initPasswordReset = async (req, res) => {
       message: error.message,
     });
   }
-}
+};
 
 exports.resetPassword = async (req, res) => {
-
-}
+  const { token, clearPassword } = req.body;
+  const decodedToken = jwt.verify(token, "my_secret_key");
+  if (decodedToken && decodedToken.iat < decodedToken.exp) {
+    try {
+      const email = decodedToken.email;
+      const user = await User.findOne({ where: { email } });
+      if (user) {
+        const hash = await bcrypt.hash(clearPassword, 10);
+        user.password = hash;
+        await user.save();
+        return res.status(204).json({
+          message: "Password updated",
+        });
+      }
+    } catch (error) {
+      return res.status(500).json({
+        message: error.message,
+      });
+    }
+  }
+  return res.status(400).json({
+    message: "Bad request",
+  });
+};
 
 exports.deleteUser = async (req, res) => {
   const { email } = req.params;
