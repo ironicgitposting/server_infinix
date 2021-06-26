@@ -29,12 +29,13 @@ describe('APP Bootstrap', () => {
     });
   });
 
-  /**
-   * Test the Get (by id) route
+   /**
+   * Test the Put route
    */
 
+
   /**
-   * Test the Put route
+   * Test the Get (by id) route
    */
 
   /**
