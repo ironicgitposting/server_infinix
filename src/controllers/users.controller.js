@@ -222,7 +222,7 @@ exports.loginUser = async (req, res) => {
     });
   } else {
     fetchedUser = user;
-    const validLogin = bcrypt.compare(password, fetchedUser.password);
+    const validLogin = await bcrypt.compare(password, fetchedUser.password);
     if (!validLogin) {
       return res.status(401).json({
         message: "Auth failure",
