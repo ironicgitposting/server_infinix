@@ -153,13 +153,19 @@ exports.resetPassword = async (req, res) => {
   if (decodedToken && decodedToken.iat < decodedToken.exp) {
     try {
       const email = decodedToken.email;
-      const user = await User.findOne({ where: { email } });
+      let user = await User.findOne({ where: { email } });
       if (user) {
-        const hash = await bcrypt.hash(clearPassword, 10);
-        user.password = hash;
-        await user.save();
-        return res.status(204).json({
-          message: "Password updated",
+        bcrypt.hash(clearPassword, 10, async (err, hash) => {
+          if (err) {
+            return res.status(500).json({
+              message: `Couldn't update password for user: ${user.email}`,
+            });
+          }
+          user.password = hash;
+          await user.save();
+          return res.status(204).json({
+            message: "Password updated",
+          });
         });
       }
     } catch (error) {
