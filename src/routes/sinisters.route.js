@@ -5,16 +5,16 @@ const SinisterConstroller = require("../controllers/sinisters.controller");
 const router = express.Router();
 
 
-// Get all sinisters disponible
-router.get("", SinisterConstroller.getSinisters);
+// Get list of sinisters or just one sinister 
+router.get("/:idVehicle", SinisterConstroller.getSinisters);
 
 // Create sinister
 router.post("/create", SinisterConstroller.createSinister);
 
 // Update sinister
-router.put("/update/:label", SinisterConstroller.updateSinister);
+router.post("/update/:id", SinisterConstroller.updateSinister);
 
 // Archive sinister
-router.post("/delete/:id", SinisterConstroller.archiveSinister);
+router.get("/delete/:id", SinisterConstroller.deleteSinister);
 
 module.exports = router;

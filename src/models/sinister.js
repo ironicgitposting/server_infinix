@@ -1,8 +1,6 @@
 const { Model } = require("sequelize");
 
-// npx sequelize-cli model:generate
-// --name User --attributes firstName:string,lastName:string,
-// email:string
+
 module.exports = (sequelize, DataTypes) => {
   class Sinister extends Model {
     /**

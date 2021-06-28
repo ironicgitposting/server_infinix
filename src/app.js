@@ -6,7 +6,8 @@ const vehiculeRoutes = require("./routes/vehicules.route");
 const bookingRoutes = require("./routes/booking.route");
 const siteRoutes = require("./routes/sites.route");
 const StatusRoutes = require("./routes/status.route");
-const settingRoutes = require("./routes/settings.route")
+const settingRoutes = require("./routes/settings.route");
+const SinisterRoutes = require("./routes/sinisters.route");
 
 // Middlewares
 const corsMW = require("./middleware/cors");
@@ -45,6 +46,6 @@ app.use(`${API_VERSION}/booking`, bookingRoutes);
 app.use(`${API_VERSION}/sites`, siteRoutes);
 app.use(`${API_VERSION}/status`, StatusRoutes);
 app.use(`${API_VERSION}/settings`, settingRoutes);
-
+app.use(`${API_VERSION}/sinisters`, SinisterRoutes);
 
 module.exports = app;
