@@ -1,5 +1,5 @@
 const express = require("express");
-
+const checkAuth = require("../middleware/checkAuth");
 const SinisterConstroller = require("../controllers/sinisters.controller");
 
 const router = express.Router();
