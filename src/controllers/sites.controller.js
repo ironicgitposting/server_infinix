@@ -152,7 +152,7 @@ exports.deleteSite = async (req, res) => {
     });
 };
 
-// Get one users
+// Get one site
 exports.getSiteById = async (req, res) => {
   //console.log("reponse :", req);
   try {

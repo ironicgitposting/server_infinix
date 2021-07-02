@@ -6,8 +6,12 @@ const nodemailer = require("nodemailer");
 const db = require("../models");
 const UserController = require("./users.controller");
 
+const SiteController = require("./sites.controller");
+
+const VehiculeController = require("./vehicules.controller");
+
 // Les Entités qu'on importe
-const { User } = db.sequelize.models;
+const { User, Setting } = db.sequelize.models;
 
 /**
  * Création d'un compte
@@ -16,8 +20,6 @@ const { User } = db.sequelize.models;
  * @param {*} mailtype
  */
 exports.sendMailUserCreationRequest = (user) => {
-  console.log(user.email);
-  // async..await is not allowed in global scope, must use a wrapper
   async function main() {
     // Generate test SMTP service account from ethereal.email
     // Only needed if you don't have a real mail account for testing
@@ -29,12 +31,19 @@ exports.sendMailUserCreationRequest = (user) => {
     // send mail with defined transport object
     let info = await getMailInfoUser(transporter, user);
 
-    let info2 = await getMailInfoAdministrateur(transporter, user);
+    /*Récupération du flag pour le paramètre "Modification Reservation Utilisateur"*/
+    const mailSetting = await Setting.findOne({
+      where: { label: "Modification Reservation Utilisateur" },
+    });
+
+    if (mailSetting && Boolean(mailSetting.flag)) {
+      let info2 = await getMailInfoAdministrateur(transporter, user);
+
+      console.log("Message sent: %s", info2.messageId);
+      // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
+    }
 
     console.log("Message sent: %s", info.messageId);
-    // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
-
-    console.log("Message sent: %s", info2.messageId);
     // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
 
     // Preview only available when sending through an Ethereal account
@@ -66,12 +75,14 @@ getMailInfoUser = async (transporter, user) => {
   return transporter.sendMail({
     from: '"Demande de création de compte - Infinix" <infinix.supp@gmail.com>', // sender address
     to: user.email, // list of receivers
-    subject: "Demande de création de compte", // Subject line
-    text: "Demande de création de compte", // plain text body
+    subject: "Demande de création de compte - " + company + "", // Subject line
+    text: "Demande de création de compte - " + company + "", // plain text body
     html: `<b>Bienvenue chez ${company} </b>
-    <p>Nous avons bien reçus votre demande de compte - ${user.name} ${user.surname}. Un administrateur va s'occupe de traiter la demande.</p>
+    <p>Nous avons bien reçus votre demande de compte - ${user.name} ${user.surname}.</p>
+    <p>Un administrateur va s'occupe de traiter la demande.</p>
     <p>Vous allez recevoir prochainement un mail de validation sur l'adresse mail  : ${user.email}</p>
-    <p>L'équipe Infinix</p>`, // html body
+    <p>Lien pour aller sur l’application Infinix : www.${company}.fr</p>
+    <p>L'équipe ${company} </p>`, // html body
   });
 };
 
@@ -89,7 +100,7 @@ getMailInfoAdministrateur = async (transporter, user) => {
       "Demande de création de compte - " + user.name + " " + user.surname, // Subject line`
     text: "Demande de création de compte - ${user.name} ${user.surname} ", // plain text body
     html: `<b>Demande de création de compte - ${user.name} ${user.surname} </b>
-    <p>Merci de traiter la demande de ${user.name} ${user.surname} en vous connecter sur l'application : www.infinix.com</p>`, // html body
+    <p>Merci de traiter la demande de ${user.name} ${user.surname} en vous connecter sur l'application : www.${company}.fr</p>`, // html body
   });
 };
 
@@ -113,16 +124,6 @@ exports.sendMailUserVehicleRequest = (booking) => {
     let info = await getMailUserVehicleRequest(transporter, booking);
 
     let info2 = await getMailAdministrateurVehicleRequest(transporter, booking);
-
-    //console.log("Message sent: %s", info.messageId);
-    // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
-
-    //console.log("Message sent: %s", info2.messageId);
-    // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
-
-    // Preview only available when sending through an Ethereal account
-    //console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
-    // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
   }
 
   main().catch(console.error);
@@ -133,34 +134,111 @@ getMailUserVehicleRequest = async (transporter, booking) => {
 
   const user = await UserController.getUserById(booking.driver);
 
-  //console.log("contenu de Utilisateur  getMailUserVehicleRequest", user);
+  const departureSite = await SiteController.getSiteById(
+    booking.departure_site
+  );
+
+  const arrivalSite = await SiteController.getSiteById(booking.arrival_site);
+
+  //Date de création
+  let dateDeCreation = new Date(booking.createdAt);
+
+  let dateDeCreationReservation = dateDeCreation.toLocaleString("fr-FR", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
+  //Date de Début
+  let dateDeDebut = new Date(booking.startDate);
+
+  let dateDebutReservation = dateDeDebut.toLocaleString("fr-FR", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
+  //Date de Fin
+  let dateDeFin = new Date(booking.endDate);
+
+  let dateFinReservation = dateDeFin.toLocaleString("fr-FR", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
+  d1 = booking.startDate.getTime() / 86400000;
+  d2 = booking.endDate.getTime() / 86400000;
+  NombreDeJours = new Number(d2 - d1).toFixed(0);
 
   return transporter.sendMail({
-    from:
-      '"Demande de réservation de véhicule - Infinix" <infinix.supp@gmail.com>', // sender address
+    from: '"Demande de réservation de véhicule - Infinix" <infinix.supp@gmail.com>', // sender address
     to: user.email, // list of receivers
-    subject: "Demande de réservation de véhicule", // Subject line
-    text: "Demande de réservation de véhicule", // plain text body
-    html: `<b>Votre demande de réservation de véhicule a bien été envoyée à l'administrateur ${company} </b>
-    <p>Numéro de demande de réservation : ${booking.id} </p>
-     <p>Demandeur : ${user.name} ${user.surname}</p><p>
-    <p>Date de création de la demande : ${booking.createdAt}. </p>
-    <p>Date de début : ${booking.startDate}. </p>
-    <p>Date de fin : ${booking.startDate}. </p>
-    <p>Lieu :  Mettre de lieu </p>
-    <p>Vous allez recevoir un mail retour pour vous indiquez si un véhicule est disponible au date et heure choisie. </p>
-    <p>Si un véhicule est disponible au date et heure choisie. Il vous restera à aller chercher les clés à l'administration  </p>
-    <p>Sinon si aucun véhicule n'est disponible</p> 
-    <p>L'équipe Infinix</p>`, // html body
+    subject: "Demande de réservation de véhicule - " + company + "", // Subject line
+    text: "Demande de réservation de véhicule - " + company + "", // plain text body
+    html: `<b>Bonjour ${user.name} ${user.surname}, </b>
+    <p>Votre demande de réservation de véhicule a bien été envoyée à l'administrateur : </p>
+    <p>Référence - ${company} : ${booking.id} </p>
+    <p>Création : ${dateDeCreationReservation} </p>
+    <p>Déplacement : ${departureSite.label} -> ${arrivalSite.label}</p>
+    <p>Période : ${NombreDeJours} jours</p>
+        <ul>
+            <li>${dateDebutReservation}</li>
+            <li>Jusqu'au ${dateFinReservation}</li>
+        </ul>
+    </p>
+    <p>Dans l’attente de vous confirmer dans un prochain message la mise à disposition d’un véhicule, après validation de l’administrateur en fonction des disponibilités.</p>
+    <p>Lien pour aller sur l’application Infinix : www.${company}.fr</p>
+    <p>L'équipe ${company} </p>`, // html body
   });
 };
 
 getMailAdministrateurVehicleRequest = async (transporter, booking) => {
   const company = "Infinix";
-
   const user = await UserController.getUserById(booking.driver);
 
-  //console.log("contenu de Utilisateur  getMailUserVehicleRequest", user);
+  const departureSite = await SiteController.getSiteById(
+    booking.departure_site
+  );
+
+  const arrivalSite = await SiteController.getSiteById(booking.arrival_site);
+
+  //Date de création
+  let dateDeCreation = new Date(booking.createdAt);
+
+  let dateDeCreationReservation = dateDeCreation.toLocaleString("fr-FR", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
+  //Date de Début
+  let dateDeDebut = new Date(booking.startDate);
+
+  let dateDebutReservation = dateDeDebut.toLocaleString("fr-FR", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
+  //Date de Fin
+  let dateDeFin = new Date(booking.endDate);
+
+  let dateFinReservation = dateDeFin.toLocaleString("fr-FR", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
+  d1 = booking.startDate.getTime() / 86400000;
+  d2 = booking.endDate.getTime() / 86400000;
+  NombreDeJours = new Number(d2 - d1).toFixed(0);
 
   return transporter.sendMail({
     from:
@@ -174,12 +252,16 @@ getMailAdministrateurVehicleRequest = async (transporter, booking) => {
       "Demande de réservation de véhicule - " + user.name + " " + user.surname, // Subject line`
     text: "Demande de réservation de véhicule - ${user.name} ${user.surname} ", // plain text body
     html: `<b>Demande de réservation de véhicule - ${user.name} ${user.surname} </b>
-    <p>Numéro de demande de réservation : ${booking.id} </p>
+    <p>Référence - ${company} : ${booking.id} </p>
     <p>Demandeur : ${user.name} ${user.surname}</p><p>
-   <p>Date de création de la demande : ${booking.createdAt}. </p>
-   <p>Date de début : ${booking.startDate}. </p>
-   <p>Date de fin : ${booking.startDate}. </p>
-   <p>Lieu :  Mettre de lieu </p>
+   <p>Création : ${dateDeCreationReservation} </p>
+    <p>Déplacement : ${departureSite.label} -> ${arrivalSite.label}</p>
+    <p>Période : ${NombreDeJours} jours </p>
+        <ul>
+            <li>${dateDebutReservation}</li>
+            <li>Jusqu'au ${dateFinReservation}</li>
+        </ul>
+    </p>
     <p>Merci de traiter la demande de réservation en vous connecter sur l'application : www.infinix.com</p>`, // html body
   });
 };
@@ -190,7 +272,6 @@ getMailAdministrateurVehicleRequest = async (transporter, booking) => {
  * La procédure est réalisée par l'administrateur
  */
 exports.sendMailUserActiverCompte = (user) => {
-  console.log(user.email);
   // async..await is not allowed in global scope, must use a wrapper
   async function main() {
     // Generate test SMTP service account from ethereal.email
@@ -208,9 +289,6 @@ exports.sendMailUserActiverCompte = (user) => {
     console.log("Message sent: %s", info.messageId);
     // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
 
-    //console.log("Message sent: %s", info2.messageId);
-    // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
-
     // Preview only available when sending through an Ethereal account
     console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
     // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
@@ -222,12 +300,13 @@ exports.sendMailUserActiverCompte = (user) => {
 getMailUserActiverCompte = async (transporter, user) => {
   const company = "Infinix";
   return transporter.sendMail({
-    from: '"Activation du compte - Infinix" <infinix.supp@gmail.com>', // sender address
+    from: '"Activation du compte - Infinix - Mail automatique" <infinix.supp@gmail.com>', // sender address
     to: user.email, // list of receivers
-    subject: "Activation du compte", // Subject line
-    text: "Activation du compte", // plain text body
-    html: `<b>Bienvenue chez ${company} </b>
+    subject: "Activation du compte - Mail automatique", // Subject line
+    text: "Activation du compte - Mail automatique", // plain text body
+    html: `<b>Bonjour ${user.name} ${user.surname}, </b>
     <p>Votre compte vient d'être activé, vous pouvez à présent vous connecter avec l'adresse mail  : ${user.email}</p>
+    <p>Lien pour aller sur l’application Infinix : www.${company}.fr</p>
     <p>L'équipe Infinix</p>`, // html body
   });
 };
@@ -236,7 +315,6 @@ getMailUserActiverCompte = async (transporter, user) => {
  * Mail Désasctivation de Compte
  */
 exports.sendMailUserDesactiverCompte = (user) => {
-  console.log(user.email);
   // async..await is not allowed in global scope, must use a wrapper
   async function main() {
     // Generate test SMTP service account from ethereal.email
@@ -254,9 +332,6 @@ exports.sendMailUserDesactiverCompte = (user) => {
     console.log("Message sent: %s", info.messageId);
     // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
 
-    //console.log("Message sent: %s", info2.messageId);
-    // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
-
     // Preview only available when sending through an Ethereal account
     console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
     // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
@@ -268,55 +343,387 @@ exports.sendMailUserDesactiverCompte = (user) => {
 getMailUserDesactiverCompte = async (transporter, user) => {
   const company = "Infinix";
   return transporter.sendMail({
-    from: '"Désactivation du compte - Infinix" <infinix.supp@gmail.com>', // sender address
+    from: '"Désactivation du compte - Infinix - Mail automatique" <infinix.supp@gmail.com>', // sender address
     to: user.email, // list of receivers
-    subject: "Désactivation du compte", // Subject line
-    text: "Désactivation du compte", // plain text body
-    html: `<b>Bienvenue chez ${company} </b>
+    subject: "Désactivation du compte - Mail automatique", // Subject line
+    text: "Désactivation du compte - Mail automatique", // plain text body
+    html: `<b>Bonjour ${user.name} ${user.surname}, </b>
     <p>Votre compte vient d'être désactivé : ${user.email}. </p>
-    <p>Si c'est une erreur veuillez contacter l'administration</p>
-    <p>L'équipe Infinix</p>`, // html body
+    <p>Lien pour aller sur l’application Infinix : www.${company}.fr</p>
+    <p>L'équipe Infinix</p>
+    <p>PS : S’il s’agit d’une erreur, veuillez contacter le service administration de votre entreprise.</p>`,
   });
 };
 
-
 /**
- * Mail Reset Password
+ * Validation de réservation d'un véhicule
+ * Méthode qui envoi un mail à l'utilisateur pour l'informer que sa demande de réservation a été validée
+ * @param {*} mail
+ * @param {*} mailtype
  */
-
-exports.sendResetPasswordForm = (user, tkn) => {
-  console.log(user.email);
+exports.sendMailLoanValidation = (booking) => {
   // async..await is not allowed in global scope, must use a wrapper
   async function main() {
+    // Generate test SMTP service account from ethereal.email
+    // Only needed if you don't have a real mail account for testing
+    let testAccount = await nodemailer.createTestAccount();
+
     // create reusable transporter object using the default SMTP transport
     let transporter = getGMailTransport();
 
     // send mail with defined transport object
-    let info = await getMailPasswordReset(transporter, user, tkn);
-
-    //let info2 = await getMailAdministrateurVehicleRequest(transporter);
-
-    console.log("Message sent: %s", info.messageId);
-    // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
-
-    //console.log("Message sent: %s", info2.messageId);
-    // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
-
-    // Preview only available when sending through an Ethereal account
-    console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
-    // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
+    let info = await getMailUserLoanValidation(transporter, booking);
   }
 
   main().catch(console.error);
 };
 
-getMailPasswordReset = async (transporter, user, tkn) => {
+getMailUserLoanValidation = async (transporter, booking) => {
+  const company = "Infinix";
+
+  const user = await UserController.getUserById(booking.driver);
+
+  const departureSite = await SiteController.getSiteById(
+    booking.departure_site
+  );
+
+  const arrivalSite = await SiteController.getSiteById(booking.arrival_site);
+
+  const vehicule = await VehiculeController.getVehiculeById(
+    booking.lentVehicule
+  );
+
+  //Date de création
+  let dateDeCreation = new Date(booking.createdAt);
+
+  let dateDeCreationReservation = dateDeCreation.toLocaleString("fr-FR", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
+  //Date de Début
+  let dateDeDebut = new Date(booking.startDate);
+
+  let dateDebutReservation = dateDeDebut.toLocaleString("fr-FR", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
+  //Date de Fin
+  let dateDeFin = new Date(booking.endDate);
+
+  let dateFinReservation = dateDeFin.toLocaleString("fr-FR", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
+  d1 = booking.startDate.getTime() / 86400000;
+  d2 = booking.endDate.getTime() / 86400000;
+  NombreDeJours = new Number(d2 - d1).toFixed(0);
 
   return transporter.sendMail({
-    from: '"Réinitialisation mot de passe - Infinix" <infinix.supp@gmail.com>', // sender address
+    from: '"Validation de la réservation de véhicule - Infinix - Mail automatique" <infinix.supp@gmail.com>', // sender address
     to: user.email, // list of receivers
-    subject: "Réinitialisation mot de passe", // Subject line
-    text: "Réinitialisation mot de passe", // plain text body
-    html: `<a href="http://localhost:4200/reset/${user.id}/${tkn}">Réinitiation du mot de passe</a>`, // html body
+    subject: "Validation de la réservation de véhicule - " + company + "", // Subject line
+    text: "Validation de la réservation de véhicule - " + company + "", // plain text body
+    html: `<b>Bonjour ${user.name} ${user.surname}, </b>
+    <p> Votre demande de réservation de véhicule a bien été validée.</p>
+    <p>Référence - ${company} : ${booking.id} </p>
+    <p>Création : ${dateDeCreationReservation} </p>
+    <p>Déplacement : ${departureSite.label} -> ${arrivalSite.label}</p>
+    <p>Période : ${NombreDeJours} jours</p>
+        <ul>
+            <li>${dateDebutReservation}</li>
+            <li>Jusqu'au ${dateFinReservation}</li>
+        </ul>
+    </p>
+    <p> Véhicule de réservation :
+       <ul>
+            <li>Immatriculation : ${vehicule.immatriculation}</li>
+            <li>Modèle : ${vehicule.model}</li>
+        </ul>
+    </p>
+    <p>Veuillez passer à l'administration pour récupérer les clés du véhicule, la veille de votre date de réservation.</p>
+    <p>Lien pour aller sur l’application Infinix : www.${company}.fr</p>
+    <p>L'équipe ${company} </p>`, // html body
+  });
+};
+
+/**
+ * Annulation de réservation d'un véhicule
+ * Méthode qui envoi un mail à l'utilisateur pour l'informer que sa demande de réservation a été annulée
+ * @param {*} mail
+ * @param {*} mailtype
+ */
+exports.sendMailLoanAnnulation = (booking) => {
+  // async..await is not allowed in global scope, must use a wrapper
+  async function main() {
+    // Generate test SMTP service account from ethereal.email
+    // Only needed if you don't have a real mail account for testing
+    let testAccount = await nodemailer.createTestAccount();
+
+    // create reusable transporter object using the default SMTP transport
+    let transporter = getGMailTransport();
+
+    // send mail with defined transport object
+    let info = await getMailUserLoanAnnulation(transporter, booking);
+  }
+
+  main().catch(console.error);
+};
+
+getMailUserLoanAnnulation = async (transporter, booking) => {
+  const company = "Infinix";
+  const user = await UserController.getUserById(booking.driver);
+
+  const departureSite = await SiteController.getSiteById(
+    booking.departure_site
+  );
+
+  const arrivalSite = await SiteController.getSiteById(booking.arrival_site);
+
+  //Date de création
+  let dateDeCreation = new Date(booking.createdAt);
+
+  let dateDeCreationReservation = dateDeCreation.toLocaleString("fr-FR", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
+  //Date de Début
+  let dateDeDebut = new Date(booking.startDate);
+
+  let dateDebutReservation = dateDeDebut.toLocaleString("fr-FR", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
+  //Date de Fin
+  let dateDeFin = new Date(booking.endDate);
+
+  let dateFinReservation = dateDeFin.toLocaleString("fr-FR", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
+  d1 = booking.startDate.getTime() / 86400000;
+  d2 = booking.endDate.getTime() / 86400000;
+  NombreDeJours = new Number(d2 - d1).toFixed(0);
+
+  return transporter.sendMail({
+    from: '"Annulation de la réservation de véhicule - Infinix - Mail automatique" <infinix.supp@gmail.com>', // sender address
+    to: user.email, // list of receivers
+    subject: "Annulation de la réservation de véhicule - " + company + "", // Subject line
+    text: "Annulation de la réservation de véhicule - " + company + "", // plain text body
+    html: `<b>Bonjour ${user.name} ${user.surname}, </b>
+    <p>Votre réservation de véhicule : ${booking.id} a bien été annulée.</p>
+    <p>Création : ${dateDeCreationReservation} </p>
+    <p>Déplacement : ${departureSite.label} -> ${arrivalSite.label}</p>
+    <p>Période : ${NombreDeJours} jours</p>
+        <ul>
+            <li>${dateDebutReservation}</li>
+            <li>Jusqu'au ${dateFinReservation}</li>
+        </ul>
+    </p>
+    <p>Lien pour aller sur l’application Infinix : www.${company}.fr</p>
+    <p>L'équipe ${company} </p>`, // html body
+  });
+};
+
+/**
+ * Cloture de réservation d'un véhicule
+ * Méthode qui envoi un mail à l'utilisateur pour l'informer que sa réservation a été cloturé
+ * @param {*} mail
+ * @param {*} mailtype
+ */
+exports.sendMailLoanCloture = (booking) => {
+  // async..await is not allowed in global scope, must use a wrapper
+  async function main() {
+    // Generate test SMTP service account from ethereal.email
+    // Only needed if you don't have a real mail account for testing
+    let testAccount = await nodemailer.createTestAccount();
+
+    // create reusable transporter object using the default SMTP transport
+    let transporter = getGMailTransport();
+
+    // send mail with defined transport object
+    let info = await getMailUserLoanCloture(transporter, booking);
+  }
+
+  main().catch(console.error);
+};
+
+getMailUserLoanCloture = async (transporter, booking) => {
+  const company = "Infinix";
+
+  const user = await UserController.getUserById(booking.driver);
+
+  const departureSite = await SiteController.getSiteById(
+    booking.departure_site
+  );
+
+  const arrivalSite = await SiteController.getSiteById(booking.arrival_site);
+
+  const vehicule = await VehiculeController.getVehiculeById(
+    booking.lentVehicule
+  );
+
+  //Date de création
+  let dateDeCreation = new Date(booking.createdAt);
+
+  let dateDeCreationReservation = dateDeCreation.toLocaleString("fr-FR", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
+  //Date de Début
+  let dateDeDebut = new Date(booking.startDate);
+
+  let dateDebutReservation = dateDeDebut.toLocaleString("fr-FR", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
+  //Date de Fin
+  let dateDeFin = new Date(booking.endDate);
+
+  let dateFinReservation = dateDeFin.toLocaleString("fr-FR", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
+  d1 = booking.startDate.getTime() / 86400000;
+  d2 = booking.endDate.getTime() / 86400000;
+  NombreDeJours = new Number(d2 - d1).toFixed(0);
+
+  return transporter.sendMail({
+    from: '"Clôture de la réservation de véhicule - Infinix - Mail automatique" <infinix.supp@gmail.com>', // sender address
+    to: user.email, // list of receivers
+    subject: "Clôture de la réservation de véhicule - " + company + "", // Subject line
+    text: "Clôture de la réservation de véhicule - " + company + "", // plain text body
+    html: `<b>Bonjour ${user.name} ${user.surname}, </b>
+    <p>Votre réservation de véhicule : ${booking.id} a bien été clôturée.</p>
+    <p>Déplacement : ${departureSite.label} -> ${arrivalSite.label}</p>
+    <p>Période : ${NombreDeJours} jours</p>
+        <ul>
+            <li>${dateDebutReservation}</li>
+            <li>Jusqu'au ${dateFinReservation}</li>
+        </ul>
+    </p>
+    
+    <p>Concernant le véhicule :  Modèle : Immatriculation : ${vehicule.immatriculation} - Modèle : ${vehicule.model} </p>
+      <ul>
+        <li> L'état de l'essence : Plein </li>
+        <li> Commentaire : Rien à signiler <li>
+      </ul>
+    </p>
+    <p>Lien pour aller sur l’application Infinix : www.${company}.fr</p>
+    <p>L'équipe ${company} </p>`, // html body
+  });
+};
+
+/**
+ * Modification de la réservation d'un véhicule
+ * Méthode qui envoi un mail à l'utilisateur pour l'informer que sa réservation a été modifiée
+ * @param {*} mail
+ * @param {*} mailtype
+ */
+exports.sendMailLoanModification = (booking) => {
+  // async..await is not allowed in global scope, must use a wrapper
+  async function main() {
+    // Generate test SMTP service account from ethereal.email
+    // Only needed if you don't have a real mail account for testing
+    let testAccount = await nodemailer.createTestAccount();
+
+    // create reusable transporter object using the default SMTP transport
+    let transporter = getGMailTransport();
+
+    // send mail with defined transport object
+    let info = await getMailUserLoanModification(transporter, booking);
+  }
+
+  main().catch(console.error);
+};
+
+getMailUserLoanModification = async (transporter, booking) => {
+  const company = "Infinix";
+
+  const user = await UserController.getUserById(booking.driver);
+
+  const departureSite = await SiteController.getSiteById(
+    booking.departure_site
+  );
+
+  const arrivalSite = await SiteController.getSiteById(booking.arrival_site);
+
+  //Date de création
+  let dateDeCreation = new Date(booking.createdAt);
+
+  let dateDeCreationReservation = dateDeCreation.toLocaleString("fr-FR", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
+  //Date de Début
+  let dateDeDebut = new Date(booking.startDate);
+
+  let dateDebutReservation = dateDeDebut.toLocaleString("fr-FR", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
+  //Date de Fin
+  let dateDeFin = new Date(booking.endDate);
+
+  let dateFinReservation = dateDeFin.toLocaleString("fr-FR", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
+  d1 = booking.startDate.getTime() / 86400000;
+  d2 = booking.endDate.getTime() / 86400000;
+  NombreDeJours = new Number(d2 - d1).toFixed(0);
+
+  return transporter.sendMail({
+    from: '"Modification de la réservation de véhicule - Infinix - Mail automatique" <infinix.supp@gmail.com>', // sender address
+    to: user.email, // list of receivers
+    subject: "Modification de la réservation de véhicule - " + company + "", // Subject line
+    text: "Modification de la réservation de véhicule - " + company + "", // plain text body
+    html: `<b>Bonjour ${user.name} ${user.surname}, </b>
+    <p>Votre réservation de véhicule : ${booking.id} a bien été modifiée.</p>
+    <p>Déplacement : ${departureSite.label} -> ${arrivalSite.label}</p>
+    <p>Période : ${NombreDeJours} jours</p>
+        <ul>
+            <li>${dateDebutReservation}</li>
+            <li>Jusqu'au ${dateFinReservation}</li>
+        </ul>
+    </p>
+
+    <p>Lien pour aller sur l’application Infinix : www.${company}.fr</p>
+    <p>L'équipe ${company} </p>`, // html body
   });
 };

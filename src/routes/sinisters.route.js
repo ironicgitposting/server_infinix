@@ -1,12 +1,10 @@
 const express = require("express");
 const checkAuth = require("../middleware/checkAuth");
 const SinisterConstroller = require("../controllers/sinisters.controller");
-
 const router = express.Router();
 
-
-// Get list of sinisters or just one sinister 
-router.get("/:idVehicle",checkAuth, SinisterConstroller.getSinisters);
+// Get list of sinisters or just one sinister
+router.get("/:idVehicle", checkAuth, SinisterConstroller.getSinisters);
 
 // Create sinister
 router.post("/create", checkAuth, SinisterConstroller.createSinister);

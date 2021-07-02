@@ -28,13 +28,13 @@ INSERT INTO public."Status"(id, label, "createdAt", "updatedAt", "familyStatus")
 VALUES (6, 'Annulé', now(), now(), null);
 
 INSERT INTO public."Site"(id, label, adress, "postalCode", city, phone, mail, pays, "createdAt", "updatedAt", status) 
-VALUES (1, 'ENI Nantes', '3 Rue Michael Faraday', '44800', 'Saint-Herblain', '0251676352', 'eni@campus.fr', 'France', now(), now(), 1000);
+VALUES (1, 'ENI Nantes', '3 Rue Michael Faraday', '44800', 'Saint-Herblain', '0251676352', 'Nanteseni@campus.fr', 'France', now(), now(), 1000);
 
 INSERT INTO public."Site"(id, label, adress, "postalCode", city, phone, mail, pays, "createdAt", "updatedAt", status)
-VALUES (2, 'ENI Rennes', '8 Rue Léo Lagrange', '35131', 'Chartres-de-Bretagne', '0251676352', 'eni@campus.fr', 'France', now(), now(), 1000);
+VALUES (2, 'ENI Rennes', '8 Rue Léo Lagrange', '35131', 'Chartres-de-Bretagne', '0251676352', 'Renneseni@campus.fr', 'France', now(), now(), 1000);
 
 INSERT INTO public."Site"(id, label, adress, "postalCode", city, phone, mail, pays, "createdAt", "updatedAt", status)
-VALUES (3, 'ENI Vannes', '8 Rue Léo Lagrange', '35131', 'Chartres-de-Bretagne', '0251676352', 'eni@campus.fr', 'France', now(), now(), 2000);
+VALUES (3, 'ENI Vannes', '8 Rue Léo Lagrange', '35131', 'Chartres-de-Bretagne', '0251676352', 'Vanneseni@campus.fr', 'France', now(), now(), 2000);
 
 
 INSERT INTO public."Vehicules"(id, type, libelle, model, "flagService", "createdAt", "updatedAt", immatriculation, state, status, site)     
