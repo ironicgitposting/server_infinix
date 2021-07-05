@@ -54,7 +54,7 @@ describe("Testing user routes", () => {
       // TODO: Utiliser des variables d'environnements ici
       .send({
         email: "infinix.supp@gmail.com",
-        password: "1nfinix.supp@gmail.coM",
+        password: "@Dm1nistrateur",
       })
       //.expect(200)
       .end((err, response) => {
