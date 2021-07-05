@@ -7,6 +7,6 @@ const statusController = require('../controllers/status.controller');
 const router = express.Router();
 
 // Get Status
-router.get('', checkAuth, statusController.getStatus);
+router.get('/:familyStatus', checkAuth, statusController.getStatusByFamilyStatus);
 
 module.exports = router;

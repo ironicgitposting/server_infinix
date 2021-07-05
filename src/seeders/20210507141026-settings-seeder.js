@@ -1,24 +1,44 @@
-'use strict';
-
 module.exports = {
-  up: async (queryInterface, Sequelize) => {
-    /**
-     * Add seed commands here.
-     *
-     * Example:
-     * await queryInterface.bulkInsert('People', [{
-     *   name: 'John Doe',
-     *   isBetaMember: false
-     * }], {});
-    */
-  },
+  up: async (queryInterface, Sequelize) =>
+    queryInterface.bulkInsert("Settings", [
+      {
+        type: 1,
+        label: "Confirmation Admin",
+        description:
+          "Envoie du mail à l'admin après inscription d'un utilisateur",
+        flag: 1,
+        createdAt: Sequelize.fn("NOW"),
+        updatedAt: Sequelize.fn("NOW"),
+      },
+      {
+        type: 1,
+        label: "Modification Reservation Utilisateur",
+        description:
+          "Envoie du mail à l'utilisateur après modification d'une réservation",
+        flag: 0,
+        createdAt: Sequelize.fn("NOW"),
+        updatedAt: Sequelize.fn("NOW"),
+      },
+      {
+        type: 1,
+        label: "Activation Utilisateur",
+        description:
+          "Envoie un mail à l'utilisateur après l'activation de celui-ci.",
+        flag: 0,
+        createdAt: Sequelize.fn("NOW"),
+        updatedAt: Sequelize.fn("NOW"),
+      },
+      {
+        type: 1,
+        label: "Desactivation Utilisateur",
+        description:
+          "Envoie un mail à l'utilisateur après la désactivation de celui-ci.",
+        flag: 0,
+        createdAt: Sequelize.fn("NOW"),
+        updatedAt: Sequelize.fn("NOW"),
+      },
+    ]),
 
-  down: async (queryInterface, Sequelize) => {
-    /**
-     * Add commands to revert seed here.
-     *
-     * Example:
-     * await queryInterface.bulkDelete('People', null, {});
-     */
-  }
+  down: async (queryInterface, Sequelize) =>
+    queryInterface.bulkDelete("Settings", null, {}),
 };

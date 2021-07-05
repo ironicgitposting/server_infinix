@@ -11,7 +11,8 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       Booking.belongsTo(models.User, { foreignKey: "driver" });
       Booking.belongsTo(models.Vehicule, { foreignKey: "lentVehicule" });
-      Booking.belongsTo(models.Site, { foreignKey: "departureSite" });
+      Booking.belongsTo(models.Site, { as: "departureSite", foreignKey: "departure_site" });
+      Booking.belongsTo(models.Site, { as: "arrivalSite", foreignKey: "arrival_site" });
       Booking.belongsTo(models.Status, { foreignKey: "status" });
     }
   }
@@ -27,8 +28,7 @@ module.exports = (sequelize, DataTypes) => {
       lentVehicule: DataTypes.INTEGER,
       startDate: DataTypes.DATE,
       endDate: DataTypes.DATE,
-      status: DataTypes.INTEGER,
-      departureSite: DataTypes.INTEGER,
+      status: DataTypes.INTEGER
     },
     {
       sequelize,

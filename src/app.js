@@ -1,5 +1,4 @@
 const express = require("express");
-const bodyParser = require("body-parser");
 // Routes
 const userRoutes = require("./routes/users.route");
 const mailRoutes = require("./routes/mails.route");
@@ -7,6 +6,8 @@ const vehiculeRoutes = require("./routes/vehicules.route");
 const bookingRoutes = require("./routes/booking.route");
 const siteRoutes = require("./routes/sites.route");
 const StatusRoutes = require("./routes/status.route");
+const settingRoutes = require("./routes/settings.route");
+const SinisterRoutes = require("./routes/sinisters.route");
 
 // Middlewares
 const corsMW = require("./middleware/cors");
@@ -25,12 +26,8 @@ app.use(
   })
 );
 
-app.use(bodyParser.json());
-app.use(
-  bodyParser.urlencoded({
-    extended: false,
-  })
-);
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.get(`${API_VERSION}/`, (req, res) => {
   res.status(200).json({
@@ -48,5 +45,7 @@ app.use(`${API_VERSION}/vehicules`, vehiculeRoutes);
 app.use(`${API_VERSION}/booking`, bookingRoutes);
 app.use(`${API_VERSION}/sites`, siteRoutes);
 app.use(`${API_VERSION}/status`, StatusRoutes);
+app.use(`${API_VERSION}/settings`, settingRoutes);
+app.use(`${API_VERSION}/sinisters`, SinisterRoutes);
 
 module.exports = app;

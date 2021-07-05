@@ -11,10 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Status.hasOne(models.FamilyStatus);
-      // FIXME: Voir pour les associations suivantes
-      // Status.hasMany(models.Vehicule, { foreignKey: 'status'});
-      // Status.hasMany(models.Vehicule, { foreignKey: 'site'});
+      Status.belongsTo(models.FamilyStatus, { foreignKey: "familyStatus" });
     }
   }
 

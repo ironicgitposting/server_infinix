@@ -6,7 +6,7 @@ const db = require("../models");
 const MailController = require("./mails.controller");
 
 // Les Entités qu'on importe
-const { User } = db.sequelize.models;
+const { User, Setting } = db.sequelize.models;
 
 // Get all users
 exports.getUsers = async (req, res) => {
@@ -89,13 +89,24 @@ exports.updateUser = async (req, res) => {
       console.log("User activated: " + userUpdated.email);
       console.log("User activated: " + userUpdated.enabled);
       // Mail d'activation ici
-      MailController.sendMailUserActiverCompte(user);
+      const mailSetting = await Setting.findOne({
+        where: { label: "Activation Utilisateur" },
+      });
+
+      if (mailSetting && Boolean(mailSetting.flag)) {
+        MailController.sendMailUserActiverCompte(user);
+      }
     }
     if (propsUpdated.includes("enabled") && !userUpdated.enabled) {
       console.log("User deactivated: " + userUpdated.email);
       console.log("User deactivated: " + userUpdated.enabled);
       // Mail de désactivation de compte utilisateur
-      MailController.sendMailUserDesactiverCompte(user);
+      const mailSetting = await Setting.findOne({
+        where: { label: "Desactivation Utilisateur" },
+      });
+      if (mailSetting && Boolean(mailSetting.flag)) {
+        MailController.sendMailUserDesactiverCompte(user);
+      }
     }
 
     res.status(200).json({
@@ -106,6 +117,89 @@ exports.updateUser = async (req, res) => {
       message: error.message,
     });
   }
+};
+
+exports.deleteUser = async (req, res) => {
+  const { email } = req.params;
+
+  try {
+    const user = await User.findOne({ where: { email } });
+    if (user) {
+      user.archived = true;
+      await user.save();
+      return res.status(204).json({
+        message: "User archived successfully",
+      });
+    }
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+  return res.status(400).json({
+    message: "Bad request",
+  });
+};
+
+exports.initPasswordReset = async (req, res) => {
+  const { email } = req.params;
+  const user = await User.findOne({ where: { email } });
+  try {
+    if (user) {
+      const tempToken = jwt.sign(
+        {
+          email: user.email,
+          userId: user.id,
+        },
+        "my_secret_key",
+        {
+          expiresIn: "10m",
+        }
+      );
+
+      MailController.sendResetPasswordForm(user, tempToken);
+    }
+    res.status(200).json({
+      message: `If a matching account was found an email was sent to ${email} to allow you to reset your password.
+`,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+exports.resetPassword = async (req, res) => {
+  const { token, clearPassword } = req.body;
+  const decodedToken = jwt.verify(token, "my_secret_key");
+  if (decodedToken && decodedToken.iat < decodedToken.exp) {
+    try {
+      const email = decodedToken.email;
+      let user = await User.findOne({ where: { email } });
+      if (user) {
+        bcrypt.hash(clearPassword, 10, async (err, hash) => {
+          if (err) {
+            return res.status(500).json({
+              message: `Couldn't update password for user: ${user.email}`,
+            });
+          }
+          user.password = hash;
+          await user.save();
+          return res.status(204).json({
+            message: "Password updated",
+          });
+        });
+      }
+    } catch (error) {
+      return res.status(500).json({
+        message: error.message,
+      });
+    }
+  }
+  return res.status(400).json({
+    message: "Bad request",
+  });
 };
 
 exports.deleteUser = async (req, res) => {
@@ -157,7 +251,7 @@ exports.loginUser = async (req, res) => {
     });
   } else {
     fetchedUser = user;
-    const validLogin = bcrypt.compare(password, fetchedUser.password);
+    const validLogin = await bcrypt.compare(password, fetchedUser.password);
     if (!validLogin) {
       return res.status(401).json({
         message: "Auth failure",
@@ -184,9 +278,8 @@ exports.loginUser = async (req, res) => {
   }
 };
 
-// Get all users
+// Get one users
 exports.getUserById = async (req, res) => {
-  //console.log("reponse :", req);
   try {
     return User.findOne({ where: { id: req } });
   } catch (error) {

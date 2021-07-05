@@ -65,7 +65,17 @@ module.exports = {
         });
       })
       .then(() => {
-        return queryInterface.addColumn('Bookings','departureSite',{
+        return queryInterface.addColumn('Bookings','departure_site',{
+            type: Sequelize.INTEGER,
+            references:{
+              model: 'Site',
+              key: 'id'
+            },
+            onDelete: 'SET NULL'
+          });
+      })
+      .then(() => {
+        return queryInterface.addColumn('Bookings','arrival_site',{
             type: Sequelize.INTEGER,
             references:{
               model: 'Site',
@@ -102,8 +112,28 @@ module.exports = {
             key: 'id'
           },
           onDelete: 'SET NULL'
-        })
+        });
 
+      })
+      .then(() => {
+        return queryInterface.addColumn('Sinisters','status',{
+            type: Sequelize.INTEGER,
+            references:{
+              model: 'Status',
+              key: 'id'
+            },
+            onDelete: 'SET NULL'
+          });
+      })
+      .then(() => {
+        return queryInterface.addColumn('Sinisters','idVehicle',{
+            type: Sequelize.INTEGER,
+            references:{
+              model: 'Vehicules',
+              key: 'id'
+            },
+            onDelete: 'SET NULL'
+          });
       });
   },
   down: (queryInterface, Sequelize) => {
