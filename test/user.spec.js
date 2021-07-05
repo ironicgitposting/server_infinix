@@ -26,6 +26,11 @@ let generatedTestUser = {
 };
 // Testing Routes
 const endpoint = "/api/v1/users";
+
+async function getGeneratedUserUserName(email) {
+  return await User.findOne({ where: { email } });
+}
+
 describe("Testing user routes", () => {
   /**
    * Test the Get route
@@ -102,21 +107,25 @@ describe("Testing user routes", () => {
       });
   });
 
-  /*
-  Test if the model is working and if we were able
-  to update it properly
-  */
-  it(`"Surname for user: '${generatedTestUser.email}' should be 'TestTest'"`, async (done) => {
+  it("Deleting a test user should return 204", (done) => {
+    generatedTestUser.surname = "TestTest";
     const email = generatedTestUser.email;
-    const updatedUser = await User.findOne({ where: { email } });
-    console.log(updatedUser.email);
-    assert.equal(updatedUser.surname, "TestTest");
-    done();
+    chai
+      .request(server)
+      .post(endpoint + "/delete/" + email)
+      .set({ Authorization: `Bearer ${token}` })
+      .send(generatedTestUser)
+      .end(async (err, response) => {
+        response.should.have.status(204);
+        await User.destroy({
+          where: {
+            email,
+          },
+        });
+        console.log("Test User deleted. User Tests complete.");
+        done();
+      });
   });
-
-  /**
-   *
-   */
 });
 
 // Testing Models
