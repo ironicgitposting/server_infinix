@@ -2,6 +2,8 @@ INSERT INTO public."FamilyStatus"(id, label, "createdAt", "updatedAt")
 VALUES (1, 'Site', now(), now());
 INSERT INTO public."FamilyStatus"(id, label, "createdAt", "updatedAt")
 VALUES (2, 'Reservation', now(), now());
+INSERT INTO public."FamilyStatus"(id, label, "createdAt", "updatedAt")
+VALUES (3, 'Sinister', now(), now());
 
 INSERT INTO public."Status"(id, label, "createdAt", "updatedAt", "familyStatus")     
 VALUES (1, 'En attente de validation', now(), now(), 2);
@@ -26,6 +28,15 @@ VALUES (2000, 'Site Fermé', now(), now(), 1);
 
 INSERT INTO public."Status"(id, label, "createdAt", "updatedAt", "familyStatus")
 VALUES (6, 'Annulé', now(), now(), null);
+
+INSERT INTO public."Status"(id, label, "createdAt", "updatedAt", "familyStatus")     
+VALUES (100, 'Découvert', now(), now(), 3);
+
+INSERT INTO public."Status"(id, label, "createdAt", "updatedAt", "familyStatus")     
+VALUES (200, 'Pris en charge', now(), now(), 3);
+
+INSERT INTO public."Status"(id, label, "createdAt", "updatedAt", "familyStatus")     
+VALUES (300, 'Résolu', now(), now(), 3);
 
 INSERT INTO public."Site"(id, label, adress, "postalCode", city, phone, mail, pays, "createdAt", "updatedAt", status) 
 VALUES (1, 'ENI Nantes', '3 Rue Michael Faraday', '44800', 'Saint-Herblain', '0251676352', 'eni@campus.fr', 'France', now(), now(), 1000);

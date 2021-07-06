@@ -9,7 +9,7 @@ const router = express.Router();
 router.get("/:idVehicle",checkAuth, SinisterConstroller.getSinisters);
 
 // Create sinister
-router.post("/create", checkAuth, SinisterConstroller.createSinister);
+router.post("/create", SinisterConstroller.createSinister);
 
 // Update sinister
 router.post("/update/:id", checkAuth, SinisterConstroller.updateSinister);

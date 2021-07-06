@@ -38,17 +38,16 @@ exports.getSinisters = async (req, res) => {
 exports.createSinister = async (req, res) => {
     const {
         libelle,
-        status,
-        vehicle
+        idVehicle,
+        status
     } = req.body;
-
-    const vehicleId = vehicle.id;
     const statusId = status.id
+
     try {
         const sinister = new Sinister({
-            libelle: libelle,
+            libelle,
             status: statusId,
-            idVehicle: vehicleId,
+            idVehicle
         });
         await sinister.save();
 
@@ -56,8 +55,9 @@ exports.createSinister = async (req, res) => {
         //TODO: creer les seeds pour les status vehicle et family status pour vehicle et sinister
         res.status(200).json({
             message: "sinister created",
-        })
+        });
     } catch (error) {
+      
         return res.status(500).json({
             message: error.message,
         });
