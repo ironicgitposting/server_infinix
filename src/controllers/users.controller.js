@@ -92,6 +92,7 @@ exports.updateUser = async (req, res) => {
       const mailSetting = await Setting.findOne({
         where: { label: "Activation Utilisateur" },
       });
+
       if (mailSetting && Boolean(mailSetting.flag)) {
         MailController.sendMailUserActiverCompte(user);
       }
@@ -116,6 +117,28 @@ exports.updateUser = async (req, res) => {
       message: error.message,
     });
   }
+};
+
+exports.deleteUser = async (req, res) => {
+  const { email } = req.params;
+
+  try {
+    const user = await User.findOne({ where: { email } });
+    if (user) {
+      user.archived = true;
+      await user.save();
+      return res.status(204).json({
+        message: "User archived successfully",
+      });
+    }
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+  return res.status(400).json({
+    message: "Bad request",
+  });
 };
 
 exports.initPasswordReset = async (req, res) => {
@@ -257,7 +280,6 @@ exports.loginUser = async (req, res) => {
 
 // Get one users
 exports.getUserById = async (req, res) => {
-  //console.log("reponse :", req);
   try {
     return User.findOne({ where: { id: req } });
   } catch (error) {

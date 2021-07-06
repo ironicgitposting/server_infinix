@@ -1,24 +1,18 @@
 // DB Object
 const bcrypt = require("bcrypt");
-
 const jwt = require("jsonwebtoken");
 const db = require("../models");
 const MailController = require("./mails.controller");
-
 // Les Entités qu'on importe
-const { Booking, Vehicule, Site, User, Status } = db.sequelize.models;
-
+const { Booking, Vehicule, Site, User, Status, Setting } = db.sequelize.models;
 // Get all users
 exports.getBookings = async (req, res) => {
-  const {
-    userId,
-    userProfile
-  } = req.params;
+  const { userId, userProfile } = req.params;
   let whereClause = {};
-  if (userProfile !== '1') {
+  if (userProfile !== "1") {
     whereClause = {
-      driver: userId
-    }
+      driver: userId,
+    };
   }
   try {
     const booking = await Booking.findAll({
@@ -44,7 +38,7 @@ exports.getBookings = async (req, res) => {
           as: Booking.status,
         },
       ],
-      where: whereClause
+      where: whereClause,
     });
     res.status(200).json({
       booking,
@@ -55,7 +49,6 @@ exports.getBookings = async (req, res) => {
     });
   }
 };
-
 exports.createBooking = async (req, res) => {
   const {
     driver,
@@ -64,14 +57,12 @@ exports.createBooking = async (req, res) => {
     endDate,
     status,
     departureSite,
-    arrivalSite
+    arrivalSite,
   } = req.body;
-
   const driverId = driver.id;
   const statusId = status.id;
   const departureSiteId = departureSite.id;
   const arrivalSiteId = arrivalSite.id;
-
   try {
     const booking = new Booking({
       driver: driverId,
@@ -80,13 +71,11 @@ exports.createBooking = async (req, res) => {
       endDate,
       status: statusId,
       departure_site: departureSiteId,
-      arrival_site: arrivalSiteId
+      arrival_site: arrivalSiteId,
     });
     await booking.save();
-
     //Envoie du mail de demande de réservation de véhicule
     MailController.sendMailUserVehicleRequest(booking);
-
     res.status(200).json({
       message: "booking created",
     });
@@ -96,7 +85,6 @@ exports.createBooking = async (req, res) => {
     });
   }
 };
-
 // Get all users
 exports.getBookingsForVehicle = async (req, res) => {
   const idVehicle = req.params.immatriculation;
@@ -137,12 +125,10 @@ exports.getBookingsForVehicle = async (req, res) => {
     });
   }
 };
-
 // Get all Bookings status=1
 exports.getAllBookingsStatus = async (req, res) => {
   try {
     const status = req.params.status;
-
     Booking.findAndCountAll({
       where: {
         status: status,
@@ -176,13 +162,11 @@ exports.getAllBookingsStatus = async (req, res) => {
     });
   }
 };
-
 // Get all Bookings status=1
 exports.getAllBookings = async (req, res) => {
   try {
     const email = req.params.email;
     const status = req.params.status;
-
     Booking.findAndCountAll({
       include: [{ model: User, as: Booking.driver, where: { status: status } }],
     }).then((result) => {
@@ -196,14 +180,15 @@ exports.getAllBookings = async (req, res) => {
     });
   }
 };
-
 // Get all booking for one utilisateur
-exports.getBookingsForUtilisateur = async (req, res) => {
+exports.getBookingsForUtilisateurStatusValide = async (req, res) => {
   try {
     const UserId = req.params.id;
+    const status = req.params.status;
     Booking.findAndCountAll({
       where: {
         driver: UserId,
+        status: status,
       },
       include: [
         {
@@ -234,8 +219,12 @@ exports.getBookingsForUtilisateur = async (req, res) => {
     });
   }
 };
-
 exports.updateBooking = async (req, res) => {
+  /*Récupération du flag pour le paramètre "Modification Reservation Utilisateur"*/
+  const mailSetting = await Setting.findOne({
+    where: { label: "Modification Reservation Utilisateur" },
+  });
+
   const {
     id,
     driver,
@@ -244,39 +233,72 @@ exports.updateBooking = async (req, res) => {
     arrivalSite,
     status,
     startDate,
-    endDate
+    endDate,
   } = req.body;
 
-  await Booking.update({
-    driver: driver.id,
-    lentVehicule: lentVehicule?.id || null,
-    departure_site: departureSite.id,
-    arrival_site: arrivalSite.id,
-    status: status.id,
-    startDate,
-    endDate
-  }, {
-    where: {
-      id: id
+  await Booking.update(
+    {
+      driver: driver.id,
+      lentVehicule: lentVehicule?.id || null,
+      departure_site: departureSite.id,
+      arrival_site: arrivalSite.id,
+      status: status.id,
+      startDate,
+      endDate,
+    },
+    {
+      where: {
+        id: id,
+      },
     }
-  }).then((result) => {
-    if (result === 1) {
+  )
+    .then(async (result) => {
+      if (result[0] === 1) {
+        // status id = 4 Validé
+        if (status.id == "4") {
+          // Déclenchement du mail de validation de la réservation
+          const bookingValide = await this.getBookingById(id);
+          MailController.sendMailLoanValidation(bookingValide);
+        }
+        // status id = 6 Annulé
+        else if (status.id == "6") {
+          const bookingAnnnule = await this.getBookingById(id);
+          MailController.sendMailLoanAnnulation(bookingAnnnule);
+        }
+        // status id = 3 Clôturé
+        else if (status.id == "3") {
+          const bookingCloture = await this.getBookingById(id);
+          MailController.sendMailLoanCloture(bookingCloture);
+        } else if (mailSetting && Boolean(mailSetting.flag)) {
+          const bookingModification = await this.getBookingById(id);
+          MailController.sendMailLoanModification(bookingModification);
+        }
 
-      res.status(200).send({
-        message: "Loan updated successfully"
+        res.status(200).send({
+          message: "Loan updated successfully",
+        });
+      } else {
+        res.send({
+          message:
+            "Something went wrong when trying to update loan with id= " +
+            id +
+            ", maybe it was not found",
+        });
+      }
+    })
+    .catch((err) => {
+      console.log("erreur " + err);
+      res.status(500).send({
+        message: "Error updating loan with id = " + id,
       });
-
-    } else {
-
-      res.send({
-        message: "Something went wrong when trying to update loan with id= " + id + ", maybe it was not found"
-      });
-
-    }
-  }).catch(err => {
-    console.log('erreur ' + err);
-    res.status(500).send({
-      message: "Error updating loan with id = " + id
     });
-  });
+};
+
+// Get one site
+exports.getBookingById = async (req, res) => {
+  try {
+    return Booking.findOne({ where: { id: req } });
+  } catch (error) {
+    throw "impossible de trouver le booking avec la clé " + req.id;
+  }
 };
