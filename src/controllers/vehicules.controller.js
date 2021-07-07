@@ -1,11 +1,11 @@
 // DB Object
-const bcrypt = require("bcrypt");
-
-const jwt = require("jsonwebtoken");
 const db = require("../models");
+const sequelize = require('sequelize');
+const Op = require('sequelize').Op;
+const moment = require("moment");
 
 // Les Entités qu'on importe
-const { Vehicule, Site, Status, User, Booking } = db.sequelize.models;
+const { Vehicule, Site, Status, Booking } = db.sequelize.models;
 
 // Get all users
 exports.getVehicules = async (req, res) => {
@@ -157,5 +157,83 @@ exports.getVehiculeById = async (req, res) => {
     return Vehicule.findOne({ where: { id: req } });
   } catch (error) {
     throw "impossible de trouver le vehicule avec la clé " + req.id;
+  }
+};
+
+// Get available vehicules
+exports.getAvailableVehicules = async (req, res) => {
+  let {
+    startDate,
+    endDate
+  } = req.params;
+  let whereClause;
+  if (endDate === 'null') {
+    whereClause = {
+      $and: sequelize.where(sequelize.fn('date', sequelize.col('startDate')), '<', moment(startDate).format('YYYY-MM-DD')),
+      status: {
+        [Op.or]: [2, 4, 5]
+      },
+      lentVehicule: {
+        [Op.ne]: null
+      }
+    };
+  } else {
+    whereClause = {
+      [Op.or]: {
+        startDate: {
+          [Op.between]: [moment(startDate).format('YYYY-MM-DD'), moment(endDate).format('YYYY-MM-DD')]
+        },
+        endDate: {
+          [Op.between]: [moment(startDate).format('YYYY-MM-DD'), moment(endDate).format('YYYY-MM-DD')]
+        },
+        [Op.and]: [
+            sequelize.where(sequelize.fn('date', sequelize.col('startDate')), '<', moment(startDate).format('YYYY-MM-DD')),
+            sequelize.where(sequelize.fn('date', sequelize.col('endDate')), '>', moment(endDate).format('YYYY-MM-DD'))
+        ]
+      },
+      status: {
+        [Op.or]: [2, 4, 5]
+      },
+      lentVehicule: {
+        [Op.ne]: null
+      }
+    };
+  }
+  try {
+    const busyVehiculesFromBookings = await Booking.findAll({
+      attributes: [
+        [sequelize.fn('DISTINCT', sequelize.col('lentVehicule')) ,'lentVehicule'],
+      ],
+      where: whereClause
+    });
+    const andClause = [];
+    for (let busyVehiculesId in busyVehiculesFromBookings) {
+      if (busyVehiculesFromBookings.hasOwnProperty(busyVehiculesId)) {
+        andClause.push({id: { [Op.ne]: busyVehiculesFromBookings[busyVehiculesId].get('lentVehicule')}});
+      }
+    }
+    const vehicules = await Vehicule.findAll({
+      include: [
+        {
+          model: Site,
+          as: Vehicule.site,
+        },
+        {
+          model: Status,
+          as: Vehicule.status,
+        },
+      ],
+      where: {
+          [Op.and]: andClause
+      }
+    });
+    res.status(200).json({
+      vehicules,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      error,
+    });
   }
 };

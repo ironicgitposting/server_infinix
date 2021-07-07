@@ -7,6 +7,9 @@ const router = express.Router();
 // Get all users
 router.get("", VehiculeController.getVehicules);
 
+// Get available vehicules
+router.get("/available/:startDate&:endDate", checkAuth, VehiculeController.getAvailableVehicules);
+
 // Create vehicule
 router.post("/add", checkAuth, VehiculeController.createVehicule);
 
