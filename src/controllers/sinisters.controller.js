@@ -5,14 +5,26 @@ const jwt = require('jsonwebtoken');
 const db = require('../models');
 
 // Les Entités qu'on importe
-const { Sinister, Vehicule } = db.sequelize.models;
+const { Sinister, Vehicule, Status } = db.sequelize.models;
 
 // Get all sinisters
 exports.getSinisters = async (req, res) => {
     const {
         idVehicle,
+        idStatus
     } = req.params;
-    
+    let whereClause = {};
+
+    if (idStatus) {
+        whereClause = {
+            idVehicle: idVehicle,
+            status: idStatus
+        }
+    } else {
+        whereClause = {
+            idVehicle: idVehicle,
+        }
+    }
     try {
         const sinisters = await Sinister.findAll({
             include: [
@@ -20,10 +32,12 @@ exports.getSinisters = async (req, res) => {
                     model: Vehicule, 
                     as: Sinister.idVehicle,
                 },
+                {
+                    model: Status,
+                    as: Sinister.status,
+                }
             ],
-            where: {
-                idVehicle: idVehicle,
-            },
+            where: whereClause,
         });
         res.status(200).json({
             sinisters,
@@ -69,13 +83,13 @@ exports.updateSinister = async (req, res) => {
     const {
         libelle,
         status,
-        vehicle
+        idVehicle
     } = req.body;
 
     await Sinister.update({
         libelle: libelle,
         status: status.id,
-        idVehicle: vehicle.id,
+        idVehicle: idVehicle,
     }, {
         where: {
             id: idSinister
