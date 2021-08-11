@@ -47,7 +47,7 @@ exports.getSitesAvailable = async (req, res) => {
 
 exports.createSite = async (req, res) => {
   const status = 1000;
-  const { label, adress, postalCode, city, phone, mail, pays } = req.body;
+  const { label, adress, postalCode, city, phone, mail, pays, latitude, longitude } = req.body;
 
   try {
     const site = new Site({
@@ -59,6 +59,8 @@ exports.createSite = async (req, res) => {
       mail,
       pays,
       status,
+      longitude,
+      latitude
     });
     console.log("site", site);
     await site.save();

@@ -29,7 +29,9 @@ module.exports = (sequelize, DataTypes) => {
         phone: DataTypes.STRING,
         mail: DataTypes.STRING,
         pays: DataTypes.STRING,
-        status: DataTypes.INTEGER
+        status: DataTypes.INTEGER,
+        latitude: DataTypes.DOUBLE,
+        longitude: DataTypes.DOUBLE
       }, {
         sequelize,
         modelName: 'Site',

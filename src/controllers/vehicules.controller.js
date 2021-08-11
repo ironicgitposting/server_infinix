@@ -224,7 +224,8 @@ exports.getAvailableVehicules = async (req, res) => {
         },
       ],
       where: {
-          [Op.and]: andClause
+        flagService: true,
+        [Op.and]: andClause
       }
     });
     res.status(200).json({

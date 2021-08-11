@@ -38,14 +38,14 @@ VALUES (200, 'Pris en charge', now(), now(), 3);
 INSERT INTO public."Status"(id, label, "createdAt", "updatedAt", "familyStatus")     
 VALUES (300, 'Résolu', now(), now(), 3);
 
-INSERT INTO public."Site"(id, label, adress, "postalCode", city, phone, mail, pays, "createdAt", "updatedAt", status) 
-VALUES (1, 'ENI Nantes', '3 Rue Michael Faraday', '44800', 'Saint-Herblain', '0251676352', 'Nanteseni@campus.fr', 'France', now(), now(), 1000);
+INSERT INTO public."Site"(id, label, adress, "postalCode", city, phone, mail, pays, latitude, longitude, "createdAt", "updatedAt", status)
+VALUES (1, 'ENI Nantes', '3 Rue Michael Faraday', '44800', 'Saint-Herblain', '0251676352', 'Nanteseni@campus.fr', 'France', 47.2254753112793, -1.6183825731277466, now(), now(), 1000);
 
-INSERT INTO public."Site"(id, label, adress, "postalCode", city, phone, mail, pays, "createdAt", "updatedAt", status)
-VALUES (2, 'ENI Rennes', '8 Rue Léo Lagrange', '35131', 'Chartres-de-Bretagne', '0251676352', 'Renneseni@campus.fr', 'France', now(), now(), 1000);
+INSERT INTO public."Site"(id, label, adress, "postalCode", city, phone, mail, pays, latitude, longitude, "createdAt", "updatedAt", status)
+VALUES (2, 'ENI Rennes', '8 Rue Léo Lagrange', '35131', 'Chartres-de-Bretagne', '0251676352', 'Renneseni@campus.fr', 'France', 48.039066314697266, -1.6919559240341187, now(), now(), 1000);
 
-INSERT INTO public."Site"(id, label, adress, "postalCode", city, phone, mail, pays, "createdAt", "updatedAt", status)
-VALUES (3, 'ENI Vannes', '8 Rue Léo Lagrange', '35131', 'Chartres-de-Bretagne', '0251676352', 'Vanneseni@campus.fr', 'France', now(), now(), 2000);
+INSERT INTO public."Site"(id, label, adress, "postalCode", city, phone, mail, pays, latitude, longitude, "createdAt", "updatedAt", status)
+VALUES (3, 'ENI Vannes', '8 Rue Léo Lagrange', '35131', 'Chartres-de-Bretagne', '0251676352', 'Vanneseni@campus.fr', 'France', 47.6586772, -2.7599079, now(), now(), 2000);
 
 
 INSERT INTO public."Vehicules"(id, type, libelle, model, "flagService", "createdAt", "updatedAt", immatriculation, state, status, site)     
