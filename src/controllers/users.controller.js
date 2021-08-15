@@ -4,6 +4,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const db = require("../models");
 const MailController = require("./mails.controller");
+const Op = require('sequelize').Op;
 
 // Les Entités qu'on importe
 const { User, Setting } = db.sequelize.models;
@@ -11,7 +12,13 @@ const { User, Setting } = db.sequelize.models;
 // Get all users
 exports.getUsers = async (req, res) => {
   try {
-    const users = await User.findAll({ where: { archived: false || null } });
+    const users = await User.findAll({
+      where: {
+        archived: {
+          [Op.or]: [false, null]
+        },
+      }
+    });
 
     res.status(200).json({
       users,
@@ -24,7 +31,7 @@ exports.getUsers = async (req, res) => {
 };
 
 exports.createUser = async (req, res) => {
-  const {
+  let {
     surname,
     name,
     profession,
@@ -37,7 +44,7 @@ exports.createUser = async (req, res) => {
     archivedDate,
   } = req.body;
 
-  const hash = await bcrypt.hash(password, 10);
+  const hash = await bcrypt.hash(password || 'Pa$$w0rd', 10);
 
   try {
     const user = new User({
@@ -230,6 +237,9 @@ exports.loginUser = async (req, res) => {
   const user = await User.findOne({
     where: {
       email,
+      archived: {
+        [Op.or]: [false, null]
+      }
     },
     attributes: [
       "id",
