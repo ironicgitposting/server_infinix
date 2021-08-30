@@ -33,6 +33,8 @@ module.exports = (sequelize, DataTypes) => {
       status: DataTypes.INTEGER,
       immatriculation: DataTypes.STRING,
       state: DataTypes.STRING,
+      killometrageVehicule: DataTypes.INTEGER,
+      essenceVehicule: DataTypes.INTEGER,
     },
     {
       sequelize,

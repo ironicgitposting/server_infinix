@@ -33,4 +33,6 @@ router.get(
   BookingController.getBookingsForUtilisateurStatusValide
 );
 
+router.post("/updateForClose", checkAuth, BookingController.updateBookingForClose)
+
 module.exports = router;

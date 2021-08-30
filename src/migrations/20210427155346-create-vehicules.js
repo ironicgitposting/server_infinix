@@ -1,5 +1,7 @@
 "use strict";
 
+const { sequelize } = require("../models");
+
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.createTable("Vehicules", {
@@ -40,6 +42,12 @@ module.exports = {
 
       state: {
         type: Sequelize.STRING,
+      },
+      killometrageVehicle: {
+        type: sequelize.INTEGER
+      },
+      essenceVehicule: {
+        type: sequelize.INTEGER
       },
     });
   },

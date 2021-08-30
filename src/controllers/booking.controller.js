@@ -302,3 +302,62 @@ exports.getBookingById = async (req, res) => {
     throw "impossible de trouver le booking avec la clé " + req.id;
   }
 };
+
+
+exports.updateBookingForClose = async (req, res) => {
+  /*Récupération du flag pour le paramètre "Modification Reservation Utilisateur"*/
+  const mailSetting = await Setting.findOne({
+    where: { label: "Modification Reservation Utilisateur" },
+  });
+
+  const {
+    idloan,
+    idVehicle,
+    status,
+    killometrage,
+    essence,
+    comment,
+  } = req.body;
+
+  await Booking.update(
+    {
+      status: status.id,
+      killometrage: killometrage.id,
+      essence: essence.id,
+      comment: comment.id,
+    },
+    {
+      where: {
+        id: idloan,
+      },
+    }
+  )
+  await Vehicule.update(
+    {
+      killometrageVehicule: killometrage.id,
+      essenceVehicule: essence.id,
+    },
+    {
+      where:{
+        id: idVehicle,
+      },
+    }
+  )
+  .then(async (result) => {
+    // status id = 3 Clôturé
+    if (status.id == "3") {
+      const bookingCloture = await this.getBookingById(id);
+      MailController.sendMailLoanCloture(bookingCloture);
+    } 
+
+    res.status(200).send({
+      message: "Loan updated successfully",
+    });
+  })
+  .catch((err) => {
+    console.log("erreur " + err);
+    res.status(500).send({
+      message: "Error updating loan with id = " + id,
+    });
+  });
+};

@@ -28,7 +28,10 @@ module.exports = (sequelize, DataTypes) => {
       lentVehicule: DataTypes.INTEGER,
       startDate: DataTypes.DATE,
       endDate: DataTypes.DATE,
-      status: DataTypes.INTEGER
+      status: DataTypes.INTEGER,
+      killometrage: DataTypes.INTEGER,
+      essence: DataTypes.INTEGER,
+      comment: DataTypes.STRING,
     },
     {
       sequelize,
