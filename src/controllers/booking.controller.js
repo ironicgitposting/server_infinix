@@ -239,7 +239,7 @@ exports.updateBooking = async (req, res) => {
   await Booking.update(
     {
       driver: driver.id,
-      lentVehicule: lentVehicule?.id || null,
+      lentVehicule: lentVehicule.id || null,
       departure_site: departureSite.id,
       arrival_site: arrivalSite.id,
       status: status.id,
