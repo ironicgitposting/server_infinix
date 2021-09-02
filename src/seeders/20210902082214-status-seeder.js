@@ -50,14 +50,14 @@ module.exports = {
                 label: "Site Ouvert",
                 createdAt: new Date(),
                 updatedAt: new Date(),
-                familyStatus: 2
+                familyStatus: 1
             },
             {
                 id: 2000,
                 label: "Site Fermé",
                 createdAt: new Date(),
                 updatedAt: new Date(),
-                familyStatus: 2
+                familyStatus: 1
             },
             {
                 id: 100,
