@@ -1,4 +1,5 @@
 const express = require("express");
+const helmet = require("helmet");
 // Routes
 const userRoutes = require("./routes/users.route");
 const mailRoutes = require("./routes/mails.route");
@@ -28,6 +29,8 @@ app.use(
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+// OWASP optimization
+app.use(helmet());
 
 app.get(`${API_VERSION}/`, (req, res) => {
   res.status(200).json({

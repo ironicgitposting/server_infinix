@@ -25,7 +25,7 @@ const normalizePort = (val) => {
   return false;
 };
 
-const port = normalizePort(process.env.PORT || "3000");
+const port = 3000; //normalizePort(process.env.PORT || "3000");
 const bind = typeof port === "string" ? `pipe ${port}` : `port ${port}`;
 
 /**

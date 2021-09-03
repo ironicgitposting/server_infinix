@@ -4,6 +4,7 @@
   "description": "projet Eni - Infinix - Gestion flotte de véhicule",
   "main": "bootstrap.js",
   "scripts": {
+    "start": "node bootstrap.js",
     "start:debug": "nodemon bootstrap.js",
     "db:create": "sequelize-cli db:create",
     "db:migrate": "sequelize-cli db:migrate",
@@ -39,6 +40,8 @@
     "debug": "^4.3.1",
     "dotenv": "^8.6.0",
     "express": "^4.17.1",
+    "forever-monitor": "^3.0.3",
+    "helmet": "^4.6.0",
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.29.1",
     "multer": "^1.4.2",
