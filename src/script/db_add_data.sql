@@ -37,7 +37,7 @@ INSERT INTO public."Site"(id, label, adress, "postalCode", city, phone, mail, pa
 VALUES (3, 'ENI Vannes', '8 Rue Léo Lagrange', '35131', 'Chartres-de-Bretagne', '0251676352', 'Vanneseni@campus.fr', 'France', 47.6586772, -2.7599079, now(), now(), 2000);
 
 INSERT INTO public."Site"(id, label, adress, "postalCode", city, phone, mail, pays, latitude, longitude, "createdAt", "updatedAt", status)
-VALUES (4, 'ENI Niort', '19 Avenue Léo Lagrange Bât B et C', '79000', 'Niort', '05 35 37 11 83', 'ecole-niort@eni-ecole.fr', 'France', 48.039066314697266, -1.6919559240341187, now(), now(), 1000);
+VALUES (4, 'ENI Niort', '19 Avenue Léo Lagrange Bât B et C', '79000', 'Niort', '05 35 37 11 83', 'ecole-niort@eni-ecole.fr', 'France', 46.3161971808798, -0.4711831239477939, now(), now(), 1000);
 
 INSERT INTO public."Site"(id, label, adress, "postalCode", city, phone, mail, pays, latitude, longitude, "createdAt", "updatedAt", status)
 VALUES (5, 'ENI Quimper', '2 Rue Georges Perros', '29000', 'Quimper', '02 98 50 55 13', 'Vecole-quimper@eni-ecole.fr', 'France', 47.9774618233667, -4.083441363150705, now(), now(), 2000);
