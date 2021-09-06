@@ -311,44 +311,41 @@ exports.updateBookingForClose = async (req, res) => {
   });
 
   const {
-    idloan,
-    idVehicle,
-    status,
+    id,
+    lentVehicule,
     killometrage,
     essence,
-    comment,
+    commentLoan
   } = req.body;
 
   await Booking.update(
     {
-      status: status.id,
-      killometrage: killometrage.id,
-      essence: essence.id,
-      comment: comment.id,
+      killometrage: killometrage,
+      essence: essence,
+      comment: commentLoan,
+      status: 3
     },
     {
       where: {
-        id: idloan,
+        id: id,
       },
     }
   )
   await Vehicule.update(
     {
-      killometrageVehicule: killometrage.id,
-      essenceVehicule: essence.id,
+      killometrageVehicule: killometrage,
+      essenceVehicule: essence,
     },
     {
       where:{
-        id: idVehicle,
+        id: lentVehicule.id,
       },
     }
   )
   .then(async (result) => {
-    // status id = 3 Clôturé
-    if (status.id == "3") {
-      const bookingCloture = await this.getBookingById(id);
-      MailController.sendMailLoanCloture(bookingCloture);
-    } 
+
+    const bookingCloture = await this.getBookingById(id);
+    MailController.sendMailLoanCloture(bookingCloture);
 
     res.status(200).send({
       message: "Loan updated successfully",

@@ -42,6 +42,7 @@ exports.createUser = async (req, res) => {
     language,
     archived,
     archivedDate,
+    authorizationAccess
   } = req.body;
 
   const hash = await bcrypt.hash(password || 'Pa$$w0rd', 10);
@@ -58,6 +59,7 @@ exports.createUser = async (req, res) => {
       language,
       archived,
       archivedDate,
+      authorizationAccess
     });
 
     // User must be activated manually by an admin

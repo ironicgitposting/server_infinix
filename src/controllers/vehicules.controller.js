@@ -39,6 +39,8 @@ exports.createVehicule = async (req, res) => {
     status,
     immatriculation,
     state,
+    essenceVehicule,
+    killometrageVehicle
   } = req.body;
 
   const siteId = site.id;
@@ -53,6 +55,8 @@ exports.createVehicule = async (req, res) => {
       status,
       immatriculation,
       state,
+      essenceVehicule,
+      killometrageVehicle
     });
 
     await vehicule.save();
