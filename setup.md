@@ -18,7 +18,17 @@ Go to server sources folder:
 cd path/to/server_infinix
 ```
 
-Create and start Windows Service:
+## Update path in svc.js file to match target environment:
+
+```
+var svc = new Service({
+ ...  
+  script: "Path\\To\\server_infinix\bootstrap.js",
+  ...
+});
+```
+
+## Create and start Windows Service:
 
 ```
 node ./svc.js
