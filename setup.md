@@ -1,15 +1,6 @@
 # Guide de déploiement
 
 ## Prerequis
-
-## Java 8 (JRE)
-
-https://www.oracle.com/java/technologies/javase-jre8-downloads.html
-
-## Tomcat 9
-
-https://tomcat.apache.org/download-90.cgi
-
 ### Node.Js
 
 Télécharger Node.js:
@@ -24,6 +15,9 @@ Télécharger Postgresql
 ## Git
 
 Télécharger Git for windows
+
+## node-windows
+npm install -g node-windows
 
 ## Télécharger les sources
 
@@ -42,12 +36,6 @@ Build your Angular application with angular-cli to dist folder
 ng build --prod --output-path ./dist
 ```
 
-```
-forever start infinix-client-bootstrap.js
-```
-
-Go to URL:
-http://localhost/login
 
 # SERVER SECTION
 
@@ -85,19 +73,11 @@ npm run db:migrate
 npm run db:seeds
 ```
 
-## Installer forever
+node /path/to/client/svc.js
+node /path/to/client/svc.js
 
-```
-npm install -g forever
-```
 
-## Modifier le script forever
+Go to URL:
+http://localhost/login
 
-## Ajouter le script pm2 aux applications de démarrage windows
 
-Touche Win + R
-shell:startup
-
-Coller le script forever
-
-## Redémarrer le pc
