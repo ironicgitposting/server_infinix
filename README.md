@@ -33,10 +33,9 @@ npm install
 npm install -g sequelize-cli
 ```
 
-## Ajouter le fichier .env à la racine du server avec le contenu suivant:
+## Add a .env file in project root folder (Change Database credentials accordingly):
 
 ```
-
 LOCAL_PORT=3000
 LOCAL_DB_HOST=127.0.0.1
 LOCAL_DB_USERNAME='postgres'
