@@ -44,10 +44,9 @@ LOCAL_DB_PORT=5432
 
 ```
 
-## Installer les bases de données
+## Create and setup databases
 
 ```
-
 npm run db:create
 npm run db:migrate
 npm run db:seeds
