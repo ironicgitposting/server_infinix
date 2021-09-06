@@ -5,19 +5,21 @@
 
 Télécharger Node.js:
 https://nodejs.org/en/download/
-
 Choisir la version LTS
 
 ## Postgresql
 
-Télécharger Postgresql
+Télécharger Postgresql 13
 
 ## Git
 
 Télécharger Git for windows
 
 ## node-windows
+```
 npm install -g node-windows
+```
+
 
 ## Télécharger les sources
 
