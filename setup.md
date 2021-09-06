@@ -34,4 +34,4 @@ var svc = new Service({
 node ./svc.js
 ```
 
-## Server should be running at localhost:3000
+## Server should be running as a service on port 3000
