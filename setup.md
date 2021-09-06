@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-- Follow the instructions given in README.md to setup and start a development server.
+Start a development server following the instructions given in README.md
 
 ## Install Node-Windows
 
