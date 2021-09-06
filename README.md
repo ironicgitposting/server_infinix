@@ -52,3 +52,5 @@ npm run db:migrate
 npm run db:seeds
 
 ```
+
+## Check instructions in setup.md to start a deployment server
