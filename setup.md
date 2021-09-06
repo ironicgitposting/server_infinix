@@ -32,11 +32,14 @@ git clone https://github.com/ironicgitposting/client_infinix.git
 
 # ANGULAR SECTION
 
-Build your Angular application with angular-cli to dist folder
+## Build your Angular application with angular-cli to dist folder
 
 ```
 ng build --prod --output-path ./dist
 ```
+
+## Démarrer le service:
+node /path/to/client/svc.js node /path/to/client/svc.js
 
 
 # SERVER SECTION
@@ -75,8 +78,8 @@ npm run db:migrate
 npm run db:seeds
 ```
 
-node /path/to/client/svc.js
-node /path/to/client/svc.js
+## Démarrer le service
+node /path/to/server/svc.js
 
 
 Go to URL:
