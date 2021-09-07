@@ -37,9 +37,9 @@ npm install -g sequelize-cli
 
 ```
 LOCAL_PORT=3000
-LOCAL_DB_HOST=127.0.0.1
-LOCAL_DB_USERNAME='postgres'
-LOCAL_DB_PASSWORD='postgres'
+DB_HOST=127.0.0.1
+DB_USERNAME='postgres'
+DB_PASSWORD='postgres'
 LOCAL_DB_PORT=5432
 
 ```
