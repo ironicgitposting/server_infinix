@@ -31,7 +31,10 @@ module.exports = (sequelize, DataTypes) => {
         password: DataTypes.STRING,
         email: DataTypes.STRING,
         telephone: DataTypes.STRING,
-        authorizationAccess: DataTypes.INTEGER,
+        authorizationAccess: {
+          type: DataTypes.INTEGER,
+          defaultValue: 0,
+        },
         createdAt: DataTypes.DATE,
         updatedAt: DataTypes.DATE,
         dateLastSeen: DataTypes.DATE,

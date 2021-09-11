@@ -42,6 +42,7 @@ module.exports = {
 
       authorizationAccess: {
         type: Sequelize.INTEGER,
+        defaultValue: 0,
       },
 
       createdAt: {
