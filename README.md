@@ -2,10 +2,9 @@
 
 ## Prerequisites
 
-- NodeJS
-- Git
-- Npm
-- Postgresql
+- NodeJS 14.17.6 LTS (https://nodejs.org/en/)
+- Git 2.33.0 (https://git-scm.com/)
+- Postgresql 13.4 (https://www.postgresql.org/download/)
 
 ## Download Sources
 
